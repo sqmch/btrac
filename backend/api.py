@@ -38,5 +38,14 @@ def remove_issue(id):
     response = Response("Issue deleted", status=200, mimetype='application/json')
     return response
 
+@login_manager.user_loader
+def user_loader(id):
+    """Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+
+    """
+    return User.query.get(user_id)
+
 if __name__ == "__main__":
     app.run(port=1234, debug=True)

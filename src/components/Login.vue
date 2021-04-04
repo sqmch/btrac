@@ -2,9 +2,17 @@
   <v-app id="btrac">
     <v-form>
       <v-container>
-        <v-card elevation="2">
+        <v-card elevation="2" max-width="500" class="mx-auto mt-12">
+          <v-card-title>
+            <v-layout align-center justify-space-between>
+              <h2 class="mb-4 ml-2 mt-2">bugtracker</h2>
+
+              <v-flex> </v-flex>
+            </v-layout>
+          </v-card-title>
+          <!--<v-divider></v-divider>-->
           <v-col>
-            <v-col class="mx-auto" cols="12" sm="6">
+            <v-col class="mx-auto" cols="12" sm="10">
               <v-text-field
                 v-model="email"
                 :error-messages="emailErrors"
@@ -14,18 +22,22 @@
                 @blur="$v.email.$touch()"
               ></v-text-field>
             </v-col>
-            <v-col class="mx-auto" cols="12" sm="6">
+            <v-col class="mx-auto" cols="12" sm="10">
               <v-text-field
+                class="mb-6"
+                type="password"
                 v-model="password"
-                :error-messages="emailErrors"
                 label="Password"
                 required
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
+                @input="$v.password.$touch()"
+                @blur="$v.password.$touch()"
               ></v-text-field>
+              <v-btn color="primary" class="mr-4" @click="submit">
+                login
+                <v-icon right dark> mdi-lock </v-icon>
+              </v-btn>
 
-              <v-btn class="mr-4" @click="submit"> submit </v-btn>
-              <v-btn @click="clear"> clear </v-btn>
+              <v-btn depressed @click="register"> register </v-btn>
             </v-col>
           </v-col>
         </v-card>

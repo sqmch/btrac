@@ -2,7 +2,7 @@
   <v-app id="btrac">
     <v-form>
       <v-container>
-        <v-card elevation="2" max-width="500" class="mx-auto mt-12">
+        <v-card elevation="12" max-width="500" class="mx-auto mt-12">
           <v-card-title>
             <v-layout align-center justify-space-between>
               <h2 class="mb-4 ml-2 mt-2">bugtracker</h2>
@@ -10,7 +10,6 @@
               <v-flex> </v-flex>
             </v-layout>
           </v-card-title>
-          <!--<v-divider></v-divider>-->
           <v-col>
             <v-col class="mx-auto" cols="12" sm="10">
               <v-text-field
@@ -37,7 +36,7 @@
                 <v-icon right dark> mdi-lock </v-icon>
               </v-btn>
 
-              <v-btn depressed @click="register"> register </v-btn>
+              <v-btn depressed @click="reg"> register </v-btn>
             </v-col>
           </v-col>
         </v-card>
@@ -97,6 +96,9 @@ export default {
         .catch((error) => {
           alert(error.message);
         });
+    },
+    reg() {
+      this.$router.push("/register");
     },
   },
 };

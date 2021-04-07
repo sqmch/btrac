@@ -74,8 +74,8 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.actions="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon small class="mr-2" @click="editIssue(item)"> mdi-pencil </v-icon>
       <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
@@ -158,8 +158,16 @@ export default {
         }
       );
     },
+    putIssue() {
+      axios
+        .put(
+          "http://127.0.0.1:1234/issues/" + this.editedItem.id,
+          this.editedItem
+        )
+        .then(console.log(this.editedItem));
+    },
 
-    editItem(item) {
+    editIssue(item) {
       this.editedIndex = this.issues.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
@@ -173,6 +181,7 @@ export default {
 
     deleteItemConfirm() {
       this.issues.splice(this.editedIndex, 1);
+      axios.delete("http://127.0.0.1:1234/issues/" + this.editedItem.id);
       this.closeDelete();
     },
 
@@ -195,6 +204,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.issues[this.editedIndex], this.editedItem);
+        this.putIssue();
       } else {
         this.issues.push(this.editedItem);
         this.addIssue();

@@ -2,10 +2,10 @@
   <v-app id="btrac">
     <v-form>
       <v-container>
-        <v-card elevation="12" max-width="500" class="mx-auto mt-12">
+        <v-card elevation="12" max-width="500" class="mx-auto mt-16">
           <v-card-title>
             <v-layout align-center justify-space-between>
-              <h2 class="mb-4 ml-2 mt-2">bugtracker</h2>
+              <h2 class="mb-4 ml-2 mt-2">trackerofbugs</h2>
 
               <v-flex> </v-flex>
             </v-layout>
@@ -17,8 +17,6 @@
                 :error-messages="emailErrors"
                 label="E-mail"
                 required
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
               ></v-text-field>
             </v-col>
             <v-col class="mx-auto" cols="12" sm="10">
@@ -28,8 +26,6 @@
                 v-model="password"
                 label="Password"
                 required
-                @input="$v.password.$touch()"
-                @blur="$v.password.$touch()"
               ></v-text-field>
               <v-btn color="primary" class="mr-4" @click="submit">
                 login
@@ -67,7 +63,7 @@ export default {
     emailErrors() {
       const errors = [];
       if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.email && errors.push("Must be valid e-mail");
+      !this.$v.email.email && errors.push("Must enter a valid e-mail address");
       !this.$v.email.required && errors.push("E-mail is required");
       return errors;
     },
@@ -75,7 +71,7 @@ export default {
 
   methods: {
     submit() {
-      this.$v.$touch();
+      //this.$v.$touch();
       this.login();
     },
     clear() {
@@ -91,7 +87,7 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(() => {
           alert("Successfully logged in");
-          this.$router.push("/dashboard");
+          this.$router.push("/tasks");
         })
         .catch((error) => {
           alert(error.message);

@@ -10,22 +10,20 @@ Vue.use(VueRouter);
 const routes = [
 	{
 		path: "/",
-		name: "Login",
+		name: "Home",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Login.vue"),
-	},
-	{
-		path: "/dashboard",
-		name: "Dashboard",
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () =>
-			import(/* webpackChunkName: "dashboard" */ "../components/Dashboard.vue"),
 		meta: {
 			authRequired: true,
 		},
 	},
+	{
+		path: "/login",
+		name: "Login",
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../components/Login.vue"),
+	},
+
 	{
 		path: "/register",
 		name: "Register",
@@ -34,6 +32,33 @@ const routes = [
 		// which is lazy-loaded when the route is visited.
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Register.vue"),
+	},
+	{
+		path: "/tasks",
+		name: "Tasks",
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../components/Tasks.vue"),
+		meta: {
+			authRequired: true,
+		},
+	},
+	{
+		path: "/projects",
+		name: "Projects",
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../components/Projects.vue"),
+		meta: {
+			authRequired: true,
+		},
+	},
+	{
+		path: "/timeline",
+		name: "Timeline",
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../components/Timeline.vue"),
+		meta: {
+			authRequired: true,
+		},
 	},
 ];
 
@@ -48,9 +73,9 @@ router.beforeEach((to, from, next) => {
 		if (firebase.auth().currentUser) {
 			next();
 		} else {
-			alert("You must be logged in to see this page");
+			//alert("You must be logged in to see this page");
 			next({
-				path: "/",
+				path: "/login",
 			});
 		}
 	} else {

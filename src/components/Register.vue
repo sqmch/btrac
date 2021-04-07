@@ -5,7 +5,7 @@
         <v-card elevation="12" max-width="500" class="mx-auto mt-12">
           <v-card-title>
             <v-layout align-center justify-space-between>
-              <h2 class="mb-4 ml-2 mt-2">bugtracker</h2>
+              <h2 class="mb-4 ml-2 mt-2">trackerofbugs</h2>
 
               <v-flex> </v-flex>
             </v-layout>
@@ -76,7 +76,7 @@ export default {
 
   methods: {
     submit() {
-      this.$v.$touch();
+      //this.$v.$touch();
       this.register();
     },
     clear() {
@@ -93,7 +93,7 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(() => {
           alert("Successfully registered! Please login.");
-          this.$router.push("/");
+          this.$router.push("/login");
         })
         .catch((error) => {
           alert(error.message);

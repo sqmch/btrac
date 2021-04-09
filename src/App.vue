@@ -27,6 +27,12 @@
     <v-main>
       <v-container class="py-0 px-0" fluid> <router-view /></v-container>
     </v-main>
+    <v-footer padless>
+      <v-col class="text-center" cols="12">
+        <v-icon size="24px">mdi-github</v-icon>
+        <!-- {{ new Date().getFullYear() }} — <strong>trackerofbugs</strong>-->
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 

@@ -98,7 +98,7 @@ export default {
       { text: "Details", value: "details" },
       { text: "Priority", value: "priority" },
       { text: "Status", value: "status" },
-      { text: "Actions", value: "actions", sortable: false },
+      { text: "Edit / Delete", value: "actions", sortable: false },
     ],
     statuses: ["Open", "In Progress", "Resolved"],
     priorities: ["Low", "Medium", "High"],
@@ -120,7 +120,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Task" : "Edit Task";
+      return this.editedIndex === -1 ? "Add Task" : "Edit Task";
     },
   },
 

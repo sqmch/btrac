@@ -2,7 +2,7 @@
   <v-app id="btrac">
     <v-form>
       <v-container>
-        <v-card elevation="12" max-width="500" class="mx-auto mt-12">
+        <v-card elevation="12" max-width="500" class="mx-auto mt-16">
           <v-card-title>
             <v-layout align-center justify-space-between>
               <h2 class="mb-4 ml-2 mt-2">trackerofbugs</h2>

@@ -41,7 +41,7 @@ export default {
   data: () => ({
     links: [
       ["mdi-folder-multiple", "Projects", "/projects"],
-      ["mdi-calendar-check", "Tasks", "/tasks"],
+      ["mdi-calendar-check", "Tasks", "/issues"],
       ["mdi-chart-timeline", "Timeline", "/timeline"],
     ],
   }),

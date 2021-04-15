@@ -1,4 +1,7 @@
-from models import *
+from settings import *
+from models import db, Issue, UserModel
+
+from flask import request, redirect, render_template
 
 # route to get all issues
 @app.route("/issues", methods=["GET"])
@@ -52,6 +55,12 @@ def remove_issue(id):
     Issue.delete_issue(id)
     response = Response("Issue deleted", status=200, mimetype="application/json")
     return response
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def catch_all(path):
+    redirect("/issues")
 
 
 if __name__ == "__main__":

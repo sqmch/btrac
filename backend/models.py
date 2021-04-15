@@ -1,7 +1,6 @@
 from settings import *
 from datetime import datetime
 import json
-from flask_login import UserMixin
 
 # Initializing our database
 db = SQLAlchemy(app)
@@ -27,11 +26,11 @@ class Issue(db.Model):
             "priority": self.priority,
         }
 
-    def add_issue(_title, _details, _priority, _status):
+    def add_issue(_title, _details, _status, _priority):
         """add issue to database using _title, _details as parameters"""
         # creating an instance of our Issue constructor
         new_issue = Issue(
-            title=_title, details=_details, priority=_priority, status=_status
+            title=_title, details=_details, status=_status, priority=_priority
         )
         db.session.add(new_issue)  # add new Issue to database session
         db.session.commit()  # commit changes to session
@@ -61,25 +60,8 @@ class Issue(db.Model):
         db.session.commit()
 
 
-class User(UserMixin, db.Model):
-    __tablename__ = "user"
+class UserModel(db.Model):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
-    authenticated = db.Column(db.Boolean, default=False)
-
-    def is_active(self):
-        """True, as all users are active."""
-        return True
-
-    def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.email
-
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return self.authenticated
-
-    def is_anonymous(self):
-        """False, as anonymous users aren't supported."""
-        return False
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(50))

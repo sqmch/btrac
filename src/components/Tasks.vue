@@ -96,8 +96,8 @@ export default {
         value: "title",
       },
       { text: "Details", value: "details" },
-      { text: "Priority", value: "priority" },
       { text: "Status", value: "status" },
+      { text: "Priority", value: "priority" },
       { text: "Edit / Delete", value: "actions", sortable: false },
     ],
     statuses: ["Open", "In Progress", "Resolved"],
@@ -107,14 +107,14 @@ export default {
     editedItem: {
       title: "",
       details: "",
-      priority: "",
       status: "",
+      priority: "",
     },
     defaultItem: {
       title: "",
       details: "",
-      priority: "",
       status: "",
+      priority: "",
     },
   }),
 

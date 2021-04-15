@@ -25,6 +25,7 @@ firebase.initializeApp(firebaseConfig);
 // keep it simple for now.
 
 new Vue({
+	mode: "history",
 	vuetify,
 	router,
 	render: (h) => h(App),

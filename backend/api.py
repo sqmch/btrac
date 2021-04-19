@@ -1,7 +1,13 @@
 from settings import *
 from models import db, Issue, UserModel
 
-from flask import request, redirect, render_template
+from flask import request, redirect
+
+
+@app.route("/auth", methods=["POST"])
+def login():
+    pass
+
 
 # route to get all issues
 @app.route("/issues", methods=["GET"])

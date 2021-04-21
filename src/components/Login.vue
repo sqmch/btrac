@@ -44,7 +44,6 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
-//import firebase from "firebase";
 import axios from "axios";
 
 export default {
@@ -87,21 +86,9 @@ export default {
         email: this.email,
         password: this.password,
       });
-
       this.$store.commit("saveToken", { token: response.data.token });
       alert("Successfully logged in");
       this.$router.push("/tasks");
-      /*
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          alert("Successfully logged in");
-          this.$router.push("/tasks");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });*/
     },
     reg() {
       this.$router.push("/register");

@@ -4,10 +4,16 @@ import vuetify from "./plugins/vuetify";
 import Vuelidate from "vuelidate";
 import router from "./router";
 import store from "./store";
+import axios from "axios";
 
 Vue.use(router);
 Vue.use(Vuelidate);
 Vue.config.productionTip = false;
+
+const token = store.token;
+if (token) {
+	axios.defaults.headers.common["Authorization"] = token;
+}
 
 new Vue({
 	mode: "history",

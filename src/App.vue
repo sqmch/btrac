@@ -29,7 +29,9 @@
     </v-main>
     <v-footer padless>
       <v-col class="text-center" cols="12">
-        <v-icon size="24px">mdi-github</v-icon>
+        <v-icon size="24px" @click="ghub">mdi-github</v-icon>
+
+        <v-icon size="24px" @click="logout">mdi-logout</v-icon>
         <!-- {{ new Date().getFullYear() }} — <strong>trackerofbugs</strong>-->
       </v-col>
     </v-footer>
@@ -45,6 +47,15 @@ export default {
       ["mdi-chart-timeline", "Timeline", "/timeline"],
     ],
   }),
-  methods: {},
+  methods: {
+    logout() {
+      this.$store.commit("REMOVE_TOKEN");
+      this.$store.commit("REMOVE_USER");
+      this.$router.push("/login");
+    },
+    ghub() {
+      window.open("https://github.com/sqmch", "_blank");
+    },
+  },
 };
 </script>

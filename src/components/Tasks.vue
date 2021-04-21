@@ -90,7 +90,7 @@ export default {
         align: "start",
         value: "title",
       },
-      { text: "Details", value: "details" },
+      //{ text: "Details", value: "details" },
       { text: "Status", value: "status" },
       { text: "Priority", value: "priority" },
       { text: "Edit / Delete", value: "actions", sortable: false },

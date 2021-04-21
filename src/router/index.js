@@ -10,9 +10,9 @@ const routes = [
 		name: "Home",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Login.vue"),
-		/*meta: {
+		meta: {
 			authRequired: true,
-		},*/
+		},
 	},
 	{
 		path: "/login",
@@ -35,18 +35,18 @@ const routes = [
 		name: "Tasks",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Tasks.vue"),
-		/*meta: {
+		meta: {
 			authRequired: true,
-		},*/
+		},
 	},
 	{
 		path: "/projects",
 		name: "Projects",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Projects.vue"),
-		/*meta: {
+		meta: {
 			authRequired: true,
-		},*/
+		},
 	},
 	{
 		path: "/timeline",
@@ -67,7 +67,7 @@ export default router;
 
 router.beforeEach((to, from, next) => {
 	if (to.matched.some((record) => record.meta.authRequired)) {
-		if (store.token.length > 1) {
+		if (store.state.user) {
 			next();
 		} else {
 			//alert("You must be logged in to see this page");

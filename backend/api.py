@@ -61,7 +61,7 @@ def login():
         {
             "sub": user.email,
             "iat": datetime.utcnow(),
-            "exp": datetime.utcnow() + timedelta(minutes=2),
+            "exp": datetime.utcnow() + timedelta(minutes=1),
         },
         current_app.config["SECRET_KEY"],
     )

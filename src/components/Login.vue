@@ -45,6 +45,7 @@
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import axios from "axios";
+import { mapMutations } from "vuex";
 
 export default {
   mixins: [validationMixin],
@@ -77,6 +78,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["SET_TOKEN", "SET_USER"]),
     submit() {
       //this.$v.$touch();
       this.login();
@@ -95,10 +97,10 @@ export default {
           password: this.password,
         })
         .then((response) => {
-          this.$store.commit("SAVE_TOKEN", {
+          this.SET_TOKEN({
             token: response.data.token,
           });
-          this.$store.commit("SET_USER", { email: this.email });
+          this.SET_USER({ email: this.email });
           console.log(this.$store.state.user);
           alert("Successfully logged in");
           this.$router.push("/tasks");

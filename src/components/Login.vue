@@ -43,15 +43,16 @@
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required, maxLength, email } from "vuelidate/lib/validators";
-import firebase from "firebase";
+import { required, email } from "vuelidate/lib/validators";
+import axios from "axios";
+import { mapMutations } from "vuex";
 
 export default {
   mixins: [validationMixin],
 
   validations: {
-    name: { required, maxLength: maxLength(10) },
     email: { required, email },
+    //password: { required, password },
   },
 
   data: () => ({
@@ -66,10 +67,18 @@ export default {
       !this.$v.email.email && errors.push("Must enter a valid e-mail address");
       !this.$v.email.required && errors.push("E-mail is required");
       return errors;
-    },
+    } /*
+    passwordErrors() {
+      const errors = [];
+      if (!this.$v.password.$dirty) return errors;
+      !this.$v.password.password && errors.push("Must enter a valid password");
+      !this.$v.password.required && errors.push("Password is required");
+      return errors;
+    },*/,
   },
 
   methods: {
+    ...mapMutations(["SET_TOKEN", "SET_USER"]),
     submit() {
       //this.$v.$touch();
       this.login();
@@ -81,16 +90,23 @@ export default {
       this.select = null;
       this.checkbox = false;
     },
-    login() {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
+    async login() {
+      await axios
+        .post("http://127.0.0.1:1234/auth", {
+          email: this.email,
+          password: this.password,
+        })
+        .then((response) => {
+          this.SET_TOKEN({
+            token: response.data.token,
+          });
+          this.SET_USER({ email: this.email });
+          console.log(this.$store.state.user);
           alert("Successfully logged in");
           this.$router.push("/issues");
         })
         .catch((error) => {
-          alert(error.message);
+          console.log(error);
         });
     },
     reg() {

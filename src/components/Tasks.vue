@@ -90,7 +90,7 @@ export default {
         align: "start",
         value: "title",
       },
-      { text: "Details", value: "details" },
+      //{ text: "Details", value: "details" },
       { text: "Status", value: "status" },
       { text: "Priority", value: "priority" },
       { text: "Edit / Delete", value: "actions", sortable: false },
@@ -135,12 +135,14 @@ export default {
   methods: {
     getIssues() {
       axios
-        .get("http://127.0.0.1:1234/issues")
+        .get("http://127.0.0.1:1234/issues", {
+          headers: { Authorization: "Bearer " + this.$store.state.token },
+        })
         .then((response) => {
           this.issues = response.data.Issues;
         })
         .catch((e) => {
-          this.errors.push(e);
+          console.log(e);
         });
     },
     addIssue() {

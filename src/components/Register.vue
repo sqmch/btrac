@@ -49,7 +49,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
-import firebase from "firebase";
+import axios from "axios";
 
 export default {
   mixins: [validationMixin],
@@ -76,28 +76,18 @@ export default {
 
   methods: {
     submit() {
-      //this.$v.$touch();
       this.register();
-    },
-    clear() {
-      this.$v.$reset();
-      this.password = "";
-      this.email = "";
     },
     toLogin() {
       this.$router.push("/");
     },
     register() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          alert("Successfully registered! Please login.");
-          this.$router.push("/login");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
+      axios.post("http://127.0.0.1:1234/register", {
+        email: this.email,
+        password: this.password,
+      });
+      alert("Registration successful! Please login.");
+      this.$router.push("/login");
     },
   },
 };

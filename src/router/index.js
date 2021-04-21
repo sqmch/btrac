@@ -1,9 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import firebase from "firebase";
-//import Dashboard from "../components/Dashboard.vue";
-//import Login from ".../components/Login.vue";
-//import Register from ".../components/Register.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -70,7 +67,7 @@ export default router;
 
 router.beforeEach((to, from, next) => {
 	if (to.matched.some((record) => record.meta.authRequired)) {
-		if (firebase.auth().currentUser) {
+		if (store.state.user) {
 			next();
 		} else {
 			//alert("You must be logged in to see this page");

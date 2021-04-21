@@ -135,12 +135,14 @@ export default {
   methods: {
     getIssues() {
       axios
-        .get("http://127.0.0.1:1234/issues")
+        .get("http://127.0.0.1:1234/issues", {
+          headers: { Authorization: "Bearer " + this.$store.state.token },
+        })
         .then((response) => {
           this.issues = response.data.Issues;
         })
         .catch((e) => {
-          this.errors.push(e);
+          console.log(e);
         });
     },
     addIssue() {

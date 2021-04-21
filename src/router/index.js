@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import firebase from "firebase";
+//import firebase from "firebase";
 //import Dashboard from "../components/Dashboard.vue";
 //import Login from ".../components/Login.vue";
 //import Register from ".../components/Register.vue";
@@ -13,9 +13,9 @@ const routes = [
 		name: "Home",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Login.vue"),
-		meta: {
+		/*meta: {
 			authRequired: true,
-		},
+		},*/
 	},
 	{
 		path: "/login",
@@ -38,27 +38,27 @@ const routes = [
 		name: "Tasks",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Tasks.vue"),
-		meta: {
+		/*meta: {
 			authRequired: true,
-		},
+		},*/
 	},
 	{
 		path: "/projects",
 		name: "Projects",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Projects.vue"),
-		meta: {
+		/*meta: {
 			authRequired: true,
-		},
+		},*/
 	},
 	{
 		path: "/timeline",
 		name: "Timeline",
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../components/Timeline.vue"),
-		meta: {
+		/*meta: {
 			authRequired: true,
-		},
+		},*/
 	},
 ];
 
@@ -68,7 +68,7 @@ const router = new VueRouter({
 
 export default router;
 
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
 	if (to.matched.some((record) => record.meta.authRequired)) {
 		if (firebase.auth().currentUser) {
 			next();
@@ -81,4 +81,4 @@ router.beforeEach((to, from, next) => {
 	} else {
 		next();
 	}
-});
+});*/

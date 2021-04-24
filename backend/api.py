@@ -44,8 +44,12 @@ def token_required(f):
 def register():
     data = request.get_json()
     user = User(**data)
-    db.session.add(user)
-    db.session.commit()
+    try:
+
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        print(e)
     return jsonify(user.to_dict()), 201
 
 
@@ -61,11 +65,12 @@ def login():
         {
             "sub": user.email,
             "iat": datetime.utcnow(),
-            "exp": datetime.utcnow() + timedelta(minutes=1),
+            "exp": datetime.utcnow() + timedelta(minutes=10),
         },
         current_app.config["SECRET_KEY"],
     )
     print(jsonify({"token": token.decode("UTF-8")}))
+    print(user.email)
     return jsonify({"token": token.decode("UTF-8")})
 
 
@@ -88,8 +93,9 @@ def get_issue_by_id(id):
 # route to add new issue
 @app.route("/issues", methods=["POST"])
 @token_required
-def add_issue():
+def add_issue(current_user):
     """add new issue to our database"""
+    print(current_user)
     request_data = request.get_json(force=True)  # getting data from client
     Issue.add_issue(
         request_data["title"],

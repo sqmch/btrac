@@ -146,14 +146,18 @@ export default {
         });
     },
     addIssue() {
-      axios.post("http://127.0.0.1:1234/issues", this.editedItem).then(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+      axios
+        .post("http://127.0.0.1:1234/issues", this.editedItem, {
+          headers: { Authorization: "Bearer " + this.$store.state.token },
+        })
+        .then(
+          (response) => {
+            console.log(response);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     },
     putIssue() {
       axios

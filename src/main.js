@@ -6,14 +6,11 @@ import router from "./router";
 import store from "./store";
 import axios from "axios";
 
+axios.defaults.baseURL = "http://localhost:1234";
+
 Vue.use(router);
 Vue.use(Vuelidate);
 Vue.config.productionTip = false;
-
-const token = store.token;
-if (token) {
-	axios.defaults.headers.common["Authorization"] = token;
-}
 
 new Vue({
 	mode: "history",

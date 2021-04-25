@@ -13,11 +13,11 @@ def token_required(f):
         auth_headers = request.headers.get("Authorization", "").split()
 
         invalid_msg = {
-            "message": "Invalid token. Registeration and / or authentication required",
+            "message": "Invalid token",
             "authenticated": False,
         }
         expired_msg = {
-            "message": "Expired token. Reauthentication required.",
+            "message": "Expired token",
             "authenticated": False,
         }
 
@@ -110,8 +110,8 @@ def add_issue(current_user):
 # route to update issue with PUT method
 @app.route("/issues/<int:id>", methods=["PUT"])
 @token_required
-def update_issue(id):
-    """edit issue in our database using issue id"""
+def put_issue(user, id):
+    """Edits issue in db"""
     request_data = request.get_json(force=True)
     Issue.update_issue(
         id,
@@ -126,20 +126,19 @@ def update_issue(id):
 
 # route to delete issue using the DELETE method
 @app.route("/issues/<int:id>", methods=["DELETE"])
-@token_required
-def remove_issue(id):
-    """Function to delete issue from our database"""
+# @token_required
+def remove_issue(user, id):
+    """Deletes issue from the db"""
     Issue.delete_issue(id)
     response = Response("Issue deleted", status=200, mimetype="application/json")
     return response
 
 
-"""
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path):
     redirect("/issues")
-"""
+
 
 if __name__ == "__main__":
     app.run(port=1234, debug=True)

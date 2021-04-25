@@ -135,7 +135,7 @@ export default {
   methods: {
     getIssues() {
       axios
-        .get("http://127.0.0.1:1234/issues", {
+        .get("/issues", {
           headers: { Authorization: "Bearer " + this.$store.state.token },
         })
         .then((response) => {
@@ -147,7 +147,7 @@ export default {
     },
     addIssue() {
       axios
-        .post("http://127.0.0.1:1234/issues", this.editedItem, {
+        .post("/issues", this.editedItem, {
           headers: { Authorization: "Bearer " + this.$store.state.token },
         })
         .then(
@@ -160,12 +160,23 @@ export default {
         );
     },
     putIssue() {
-      axios
-        .put(
-          "http://127.0.0.1:1234/issues/" + this.editedItem.id,
-          this.editedItem
-        )
-        .then(console.log(this.editedItem));
+      axios({
+        method: "put",
+        url: `/issues/${this.editedItem.id}`,
+        headers: { Authorization: "Bearer " + this.$store.state.token },
+        data: this.editedItem,
+      }).catch((e) => {
+        console.log(e);
+      });
+      /*axios
+        .put(`/issues/${this.editedItem.id}`, this.editedItem, {
+          headers: { Authorization: "Bearer " + this.$store.state.token },
+        })
+        .then(console.log(this.editedItem)).catch((e) => {
+        console.log(e);
+      });
+
+        */
     },
 
     editIssue(item) {
@@ -182,7 +193,13 @@ export default {
 
     deleteItemConfirm() {
       this.issues.splice(this.editedIndex, 1);
-      axios.delete("http://127.0.0.1:1234/issues/" + this.editedItem.id);
+      axios
+        .delete(`http://127.0.0.1:1234/issues/${this.editedItem.id}`, {
+          headers: { Authorization: "Bearer " + this.$store.state.token },
+        })
+        .catch((e) => {
+          console.log(e);
+        });
       this.closeDelete();
     },
 

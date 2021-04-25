@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 # creating an instance of the flask app
 app = Flask(__name__)
-CORS(app)
+CORS(app, expose_headers="Authorization")
 
 # configure db
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"

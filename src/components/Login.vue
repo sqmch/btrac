@@ -23,6 +23,7 @@
               <v-text-field
                 class="mb-6"
                 type="password"
+                :error-messages="passwordErrors"
                 v-model="password"
                 label="Password"
                 required
@@ -52,7 +53,7 @@ export default {
 
   validations: {
     email: { required, email },
-    //password: { required, password },
+    password: { required },
   },
 
   data: () => ({
@@ -62,25 +63,27 @@ export default {
 
   computed: {
     emailErrors() {
-      const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.email && errors.push("Must enter a valid e-mail address");
-      !this.$v.email.required && errors.push("E-mail is required");
-      return errors;
-    } /*
+      const emailErrors = [];
+      if (!this.$v.email.$dirty) return emailErrors;
+      !this.$v.email.email &&
+        emailErrors.push("Must enter a valid e-mail address");
+      !this.$v.email.required && emailErrors.push("E-mail is required");
+      return emailErrors;
+    },
     passwordErrors() {
-      const errors = [];
-      if (!this.$v.password.$dirty) return errors;
-      !this.$v.password.password && errors.push("Must enter a valid password");
-      !this.$v.password.required && errors.push("Password is required");
-      return errors;
-    },*/,
+      const passwordErrors = [];
+      if (!this.$v.password.$dirty) return passwordErrors;
+      !this.$v.password.password &&
+        passwordErrors.push("Must enter a valid password");
+      !this.$v.password.required && passwordErrors.push("Password is required");
+      return passwordErrors;
+    },
   },
 
   methods: {
     ...mapMutations(["SET_TOKEN", "SET_USER"]),
     submit() {
-      //this.$v.$touch();
+      this.$v.$touch();
       this.login();
     },
     clear() {
@@ -101,8 +104,6 @@ export default {
             token: response.data.token,
           });
           this.SET_USER({ email: this.email });
-          console.log(this.$store.state.user);
-          alert("Successfully logged in");
           this.$router.push("/issues");
         })
         .catch((error) => {

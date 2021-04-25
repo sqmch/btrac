@@ -126,7 +126,7 @@ def put_issue(user, id):
 
 # route to delete issue using the DELETE method
 @app.route("/issues/<int:id>", methods=["DELETE"])
-# @token_required
+@token_required
 def remove_issue(user, id):
     """Deletes issue from the db"""
     Issue.delete_issue(id)

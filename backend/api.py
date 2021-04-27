@@ -78,7 +78,7 @@ def login():
 @app.route("/issues", methods=["GET"])
 @token_required
 def get_issues(current_user):
-    """get all the issues in the database"""
+    """Returns all issues in the db"""
     return jsonify({"Issues": Issue.get_all_issues()})
 
 
@@ -86,6 +86,7 @@ def get_issues(current_user):
 @app.route("/issues/<int:id>", methods=["GET"])
 @token_required
 def get_issue_by_id(id):
+    """Returns issue specified by id"""
     return_value = Issue.get_issue(id)
     return jsonify(return_value)
 
@@ -94,7 +95,7 @@ def get_issue_by_id(id):
 @app.route("/issues", methods=["POST"])
 @token_required
 def add_issue(current_user):
-    """add new issue to our database"""
+    """Adds new issue to db"""
     print(current_user)
     request_data = request.get_json(force=True)  # getting data from client
     Issue.add_issue(
@@ -111,7 +112,7 @@ def add_issue(current_user):
 @app.route("/issues/<int:id>", methods=["PUT"])
 @token_required
 def put_issue(user, id):
-    """Edits issue in db"""
+    """Edits issue in the db"""
     request_data = request.get_json(force=True)
     Issue.update_issue(
         id,

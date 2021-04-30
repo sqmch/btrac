@@ -1,24 +1,36 @@
-# btrac
+# btrac - a simple issue tracker
 
-## Project setup
+## Built with
+
+- Python (Flask)
+- Vue.js (Vuetify)
+
+
+## About the project
+
+This is a practice project with the goal of further exploring SQLAlchemy, relational databases, JWT authentication and full stack development in general.  btrac allows the user to create an account, create projects and add issues to a project for easy tracking. Issues have a status and priority levels and can be added/removed/edited with ease.
+
+## How to run in development
+
+Install frontend dependencies:
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+Run in root directory:
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+Create a virtual environment in ./backend and activate it:
 ```
-npm run build
+py -m venv venv
+.\venv\Scripts\activate
 ```
-
-### Lints and fixes files
+Install backend dependencies:
 ```
-npm run lint
+pip install -r requirements.txt
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Run the flask server
+```python
+py api.py
+```

@@ -67,6 +67,18 @@ class Project(db.Model):
             for project in Project.query.filter_by(user=_user).all()
         ]
 
+    def update_project(_id, _title):
+        """update a project"""
+        project = Project.query.filter_by(id=_id).first()
+        project.title = _title
+        db.session.commit()
+
+    def delete_project(_id):
+        """delete a project from the database"""
+        Project.query.filter_by(id=_id).delete()
+        # filter issue by id and delete
+        db.session.commit()
+
 
 class Issue(db.Model):
     __tablename__ = "issues"

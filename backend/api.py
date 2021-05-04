@@ -91,6 +91,30 @@ def add_project(current_user):
     return response
 
 
+# route to update issue with PUT method
+@app.route("/projects/<int:id>", methods=["PUT"])
+@token_required
+def put_project(current_user, id):
+    """Edits project in the db"""
+    request_data = request.get_json(force=True)
+    Project.update_project(
+        id,
+        request_data["title"],
+    )
+    response = Response("Project updated", status=200, mimetype="application/json")
+    return response
+
+
+# route to delete project using the DELETE method
+@app.route("/projects/<int:id>", methods=["DELETE"])
+@token_required
+def remove_project(current_user, id):
+    """Deletes project from the db"""
+    Project.delete_project(id)
+    response = Response("Project deleted", status=200, mimetype="application/json")
+    return response
+
+
 # route to get all issues
 @app.route("/issues", methods=["GET"])
 @token_required

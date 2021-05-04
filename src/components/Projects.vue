@@ -60,7 +60,7 @@
       <v-icon small class="mr-2" @click="editProject(item)">
         mdi-pencil
       </v-icon>
-      <v-icon small @click="deleteProject(item)"> mdi-delete </v-icon>
+      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="getProjects"> Reset </v-btn>

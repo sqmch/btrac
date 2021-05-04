@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="issues" sort-by="calories">
+  <v-data-table :headers="headers" :items="issues" sort-by="title">
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>Tasks</v-toolbar-title>

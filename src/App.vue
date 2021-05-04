@@ -44,7 +44,6 @@ export default {
     links: [
       ["mdi-folder-multiple", "Projects", "/projects"],
       ["mdi-calendar-check", "Tasks", "/issues"],
-      ["mdi-chart-timeline", "Timeline", "/timeline"],
     ],
   }),
   methods: {

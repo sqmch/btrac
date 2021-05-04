@@ -1,6 +1,6 @@
 from flask.globals import current_app
 from settings import *
-from models import db, Issue, User
+from models import db, Issue, User, Project
 from flask import request, redirect
 from datetime import datetime, timedelta
 from functools import wraps
@@ -69,9 +69,26 @@ def login():
         },
         current_app.config["SECRET_KEY"],
     )
-    print(jsonify({"token": token.decode("UTF-8")}))
-    print(user.email)
     return jsonify({"token": token.decode("UTF-8")})
+
+
+# route to get all projects
+@app.route("/projects", methods=["GET"])
+@token_required
+def get_projects(current_user):
+    """Returns all issues in the db"""
+    return jsonify({"Projects": Project.get_all_projects(current_user)})
+
+
+# route to add new issue
+@app.route("/projects", methods=["POST"])
+@token_required
+def add_project(current_user):
+    """Adds new project to db"""
+    request_data = request.get_json(force=True)  # getting data from client
+    Project.add_project(request_data["title"], current_user)
+    response = Response("Project added", 201, mimetype="application/json")
+    return response
 
 
 # route to get all issues
@@ -79,7 +96,7 @@ def login():
 @token_required
 def get_issues(current_user):
     """Returns all issues in the db"""
-    return jsonify({"Issues": Issue.get_all_issues()})
+    return jsonify({"Issues": Issue.get_all_issues(1)})
 
 
 # route to get issue by id
@@ -96,7 +113,6 @@ def get_issue_by_id(id):
 @token_required
 def add_issue(current_user):
     """Adds new issue to db"""
-    print(current_user)
     request_data = request.get_json(force=True)  # getting data from client
     Issue.add_issue(
         request_data["title"],

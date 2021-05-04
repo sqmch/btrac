@@ -42,21 +42,21 @@ class User(db.Model):
 class Project(db.Model):
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
+    title = db.Column(db.String(50), unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     issues = db.relationship("Issue", backref="project")
 
     def json(self):
         return {
             "id": self.id,
-            "name": self.name,
+            "title": self.title,
             "user_id": self.user_id,
             "issues": self.issues,
         }
 
-    def add_project(_name, _user):
+    def add_project(_title, _user):
         """add new project to database"""
-        new_project = Project(name=_name, user=_user)
+        new_project = Project(title=_title, user=_user)
         db.session.add(new_project)
         db.session.commit()
 
@@ -102,10 +102,11 @@ class Issue(db.Model):
         db.session.add(new_issue)  # add new Issue to database session
         db.session.commit()  # commit changes to session
 
-    def get_all_issues(_project):
+    def get_all_issues(_project_id):
         """get all issues in our database"""
         return [
-            Issue.json(issue) for issue in Issue.query.filter_by(project=_project).all()
+            Issue.json(issue)
+            for issue in Issue.query.filter_by(project_id=_project_id).all()
         ]
 
     def get_issue(_id):

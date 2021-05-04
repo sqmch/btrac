@@ -3,6 +3,7 @@ node_modules
 /dist
 backend/venv
 backend/database.db
+backend/basicconfig.py
 __pycache__
 
 # local env files

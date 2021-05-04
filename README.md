@@ -21,8 +21,9 @@ Run in root directory:
 npm run serve
 ```
 
-Create a virtual environment in ./backend and activate it:
+Create a virtual environment in .\backend and activate it:
 ```
+cd backend
 py -m venv venv
 .\venv\Scripts\activate
 ```

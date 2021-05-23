@@ -50,7 +50,7 @@ export default router;
 
 router.beforeEach((to, from, next) => {
 	if (to.matched.some((record) => record.meta.authRequired)) {
-		if (store.state.user) {
+		if (store.state.token) {
 			next();
 		} else {
 			next({

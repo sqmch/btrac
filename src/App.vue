@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <v-navigation-drawer app>
       <v-sheet class="pa-4">
-        <div class="headline">trackerofbugs</div>
+        <div class="headline">trackerofthings</div>
       </v-sheet>
 
       <v-divider></v-divider>

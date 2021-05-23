@@ -63,7 +63,7 @@
       <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="getProjects"> Reset </v-btn>
+      <h2>Something went wrong fetching the data, please try again.</h2>
     </template>
   </v-data-table>
 </template>

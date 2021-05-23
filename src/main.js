@@ -7,6 +7,16 @@ import store from "./store";
 import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:1234";
+axios.interceptors.response.use(
+	function(response) {
+		return response;
+	},
+	function(error) {
+		alert("Session expired, please login again.");
+		router.push({ name: "Login" });
+		return Promise.reject(error);
+	}
+);
 
 Vue.use(router);
 Vue.use(Vuelidate);

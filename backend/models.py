@@ -12,7 +12,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(50))
-    projects = db.relationship("Project", backref="user")
+    projects = db.relationship("Project", lazy="dynamic", backref="user")
 
     def __init__(self, email, password):
         self.email = email
@@ -51,10 +51,9 @@ class Project(db.Model):
             "id": self.id,
             "title": self.title,
             "user_id": self.user_id,
-            "issues": self.issues,
         }
 
-    def add_project(_title, _user):
+    def add_project(_title: str, _user):
         """add new project to database"""
         new_project = Project(title=_title, user=_user)
         db.session.add(new_project)
@@ -67,16 +66,15 @@ class Project(db.Model):
             for project in Project.query.filter_by(user=_user).all()
         ]
 
-    def update_project(_id, _title):
-        """update a project"""
+    def update_project(_id: int, _title: str):
+        """updates a project"""
         project = Project.query.filter_by(id=_id).first()
         project.title = _title
         db.session.commit()
 
-    def delete_project(_id):
+    def delete_project(_id: int):
         """delete a project from the database"""
         Project.query.filter_by(id=_id).delete()
-        # filter issue by id and delete
         db.session.commit()
 
 
@@ -85,9 +83,7 @@ class Issue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # date = db.Column(db.String(20), nullable=False, default=datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
     title = db.Column(db.String(80), nullable=False)
-    details = db.Column(
-        db.String(1000), nullable=False
-    )  # More detailed description of the issue
+    details = db.Column(db.String(1000), nullable=False)
     status = db.Column(db.String(20), default="Open")  # Open, In Progress, Resolved
     priority = db.Column(db.String(20), default="Low")  # Low, Medium, High
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
@@ -101,7 +97,7 @@ class Issue(db.Model):
             "priority": self.priority,
         }
 
-    def add_issue(_title, _details, _status, _priority, _project):
+    def add_issue(_title: str, _details: str, _status: str, _priority: str, _project):
         """add new issue to database"""
         # creating an instance of our Issue constructor
         new_issue = Issue(
@@ -125,7 +121,7 @@ class Issue(db.Model):
         """get issue using the id as parameter"""
         return [Issue.json(Issue.query.filter_by(id=_id).first())]
 
-    def update_issue(_id, _title, _details, _status, _priority):
+    def update_issue(_title: str, _details: str, _status: str, _priority: str):
         """update an issue"""
         issue = Issue.query.filter_by(id=_id).first()
         # issue.date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -135,7 +131,7 @@ class Issue(db.Model):
         issue.priority = _priority
         db.session.commit()
 
-    def delete_issue(_id):
+    def delete_issue(_id: int):
         """delete an issue from our database"""
         Issue.query.filter_by(id=_id).delete()
         # filter issue by id and delete

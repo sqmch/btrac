@@ -69,6 +69,8 @@
 </template>
 <script>
 import axios from "axios";
+
+import { mapMutations } from "vuex";
 export default {
   data: () => ({
     dialog: false,
@@ -111,6 +113,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["SET_PROJECT_ID"]),
     getProjects() {
       axios
         .get("/projects", {
@@ -199,7 +202,8 @@ export default {
       this.close();
     },
     handleRowClick(row) {
-      console.log("row clicked:" + row.title);
+      this.SET_PROJECT_ID(row.id);
+      this.$router.push("/projects/issues");
     },
   },
 };

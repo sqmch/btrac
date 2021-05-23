@@ -4,7 +4,9 @@ import createPersistedState from "vuex-persistedstate";
 import auth from "./modules/auth";
 
 Vue.use(Vuex);
-const state = {};
+const state = {
+	project_id: null,
+};
 const getters = {};
 const mutations = {
 	SET_TOKEN(state, payload) {
@@ -18,6 +20,9 @@ const mutations = {
 	},
 	REMOVE_USER(state) {
 		state.user = "";
+	},
+	SET_PROJECT_ID(state, id) {
+		state.project_id = id;
 	},
 };
 

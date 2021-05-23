@@ -7,9 +7,8 @@ Vue.use(VueRouter);
 const routes = [
 	{
 		path: "/",
-		name: "Home",
-		component: () =>
-			import(/* webpackChunkName: "about" */ "../components/Login.vue"),
+		name: "Projects",
+		component: () => import("../components/Projects.vue"),
 		meta: {
 			authRequired: true,
 		},
@@ -17,42 +16,26 @@ const routes = [
 	{
 		path: "/login",
 		name: "Login",
-		component: () =>
-			import(/* webpackChunkName: "about" */ "../components/Login.vue"),
+		component: () => import("../components/Login.vue"),
 	},
 
 	{
 		path: "/register",
 		name: "Register",
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () =>
-			import(/* webpackChunkName: "about" */ "../components/Register.vue"),
-	},
-	{
-		path: "/issues",
-		name: "Tasks",
-		component: () =>
-			import(/* webpackChunkName: "about" */ "../components/Tasks.vue"),
-		meta: {
-			authRequired: true,
-		},
+		component: () => import("../components/Register.vue"),
 	},
 	{
 		path: "/projects",
 		name: "Projects",
-		component: () =>
-			import(/* webpackChunkName: "about" */ "../components/Projects.vue"),
+		component: () => import("../components/Projects.vue"),
 		meta: {
 			authRequired: true,
 		},
 	},
 	{
-		path: "/timeline",
-		name: "Timeline",
-		component: () =>
-			import(/* webpackChunkName: "about" */ "../components/Timeline.vue"),
+		path: "/projects/issues",
+		name: "Issues",
+		component: () => import("../components/Issues.vue"),
 		meta: {
 			authRequired: true,
 		},
@@ -70,7 +53,6 @@ router.beforeEach((to, from, next) => {
 		if (store.state.user) {
 			next();
 		} else {
-			//alert("You must be logged in to see this page");
 			next({
 				path: "/login",
 			});

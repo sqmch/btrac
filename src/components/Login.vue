@@ -104,7 +104,7 @@ export default {
             token: response.data.token,
           });
           this.SET_USER({ email: this.email });
-          this.$router.push("/issues");
+          this.$router.push("/projects");
         })
         .catch((error) => {
           console.log(error);

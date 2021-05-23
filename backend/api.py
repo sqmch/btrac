@@ -76,7 +76,8 @@ def login():
 @app.route("/projects", methods=["GET"])
 @token_required
 def get_projects(current_user):
-    """Returns all issues in the db"""
+    """Returns all projects in the db"""
+
     return jsonify({"Projects": Project.get_all_projects(current_user)})
 
 
@@ -115,34 +116,28 @@ def remove_project(current_user, id):
     return response
 
 
-# route to get all issues
-@app.route("/issues", methods=["GET"])
+# route to display issue table of specified project
+@app.route("/projects/<int:id>/issues", methods=["GET"])
 @token_required
-def get_issues(current_user):
-    """Returns all issues in the db"""
-    return jsonify({"Issues": Issue.get_all_issues(1)})
-
-
-# route to get issue by id
-@app.route("/issues/<int:id>", methods=["GET"])
-@token_required
-def get_issue_by_id(id):
-    """Returns issue specified by id"""
-    return_value = Issue.get_issue(id)
-    return jsonify(return_value)
+def get_issues_of_project(current_user, id):
+    """Returns issues of specified project"""
+    return jsonify({"Issues": Issue.get_all_issues(id)})
 
 
 # route to add new issue
-@app.route("/issues", methods=["POST"])
+@app.route("/projects/<int:id>/issues", methods=["POST"])
 @token_required
-def add_issue(current_user):
+def add_issue(current_user, id):
     """Adds new issue to db"""
     request_data = request.get_json(force=True)  # getting data from client
+    # project = current_user.projects.filter_by(id=id).first()
+    project = Project.query.get(id)
     Issue.add_issue(
         request_data["title"],
         request_data["details"],
         request_data["status"],
         request_data["priority"],
+        project,
     )
     response = Response("Issue added", 201, mimetype="application/json")
     return response

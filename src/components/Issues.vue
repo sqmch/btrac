@@ -111,6 +111,7 @@ export default {
       status: "",
       priority: "",
     },
+    selectedProjectId: null,
   }),
 
   computed: {
@@ -135,7 +136,7 @@ export default {
   methods: {
     getIssues() {
       axios
-        .get("/issues", {
+        .get(`/projects/${this.$store.state.project_id}/issues`, {
           headers: { Authorization: "Bearer " + this.$store.state.token },
         })
         .then((response) => {
@@ -147,9 +148,13 @@ export default {
     },
     addIssue() {
       axios
-        .post("/issues", this.editedItem, {
-          headers: { Authorization: "Bearer " + this.$store.state.token },
-        })
+        .post(
+          `/projects/${this.$store.state.project_id}/issues`,
+          this.editedItem,
+          {
+            headers: { Authorization: "Bearer " + this.$store.state.token },
+          }
+        )
         .then(
           (response) => {
             console.log(response);

@@ -41,10 +41,7 @@
 <script>
 export default {
   data: () => ({
-    links: [
-      ["mdi-folder-multiple", "Projects", "/projects"],
-      ["mdi-calendar-check", "Tasks", "/issues"],
-    ],
+    links: [["mdi-folder-multiple", "Projects", "/projects"]],
   }),
   methods: {
     logout() {

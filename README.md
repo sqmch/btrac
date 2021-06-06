@@ -1,4 +1,4 @@
-# btrac - a simple issue tracker
+# trvcker - a simple issue tracker
 
 ## Built with
 

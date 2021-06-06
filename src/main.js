@@ -12,7 +12,7 @@ axios.interceptors.response.use(
 		return response;
 	},
 	function(error) {
-		alert("Session expired, please login again.");
+		//alert("Session expired, please login again.");
 		router.push({ name: "Login" });
 		return Promise.reject(error);
 	}

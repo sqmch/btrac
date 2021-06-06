@@ -1,5 +1,12 @@
 <template>
-  <v-data-table :headers="headers" :items="issues" sort-by="title">
+  <v-data-table
+    item-key="title"
+    :loading="issuesLoading"
+    loading-text="Loading... Please wait"
+    :headers="headers"
+    :items="issues"
+    sort-by="title"
+  >
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>Tasks</v-toolbar-title>
@@ -10,7 +17,9 @@
             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
               Add Issue
             </v-btn>
-            <v-btn dark class="mb-2 mr-5" to="/projects"> Back </v-btn>
+            <v-btn dark class="mb-2 mr-5" to="/projects">
+              Back to projects</v-btn
+            >
           </template>
           <v-card>
             <v-card-title>
@@ -74,15 +83,13 @@
       <v-icon small class="mr-2" @click="editIssue(item)"> mdi-pencil </v-icon>
       <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
-    <template v-slot:no-data>
-      <h2>Something went wrong fetching the data, please try again.</h2>
-    </template>
   </v-data-table>
 </template>
 <script>
 import axios from "axios";
 export default {
   data: () => ({
+    issuesLoading: false,
     dialog: false,
     dialogDelete: false,
     headers: [
@@ -136,12 +143,14 @@ export default {
 
   methods: {
     getIssues() {
+      this.issuesLoading = true;
       axios
         .get(`/projects/${this.$store.state.project_id}/issues`, {
           headers: { Authorization: "Bearer " + this.$store.state.token },
         })
         .then((response) => {
           this.issues = response.data.Issues;
+          this.issuesLoading = false;
         })
         .catch((e) => {
           console.log(e);

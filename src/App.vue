@@ -1,8 +1,8 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer app>
+    <v-navigation-drawer app dark permanent>
       <v-sheet class="pa-4">
-        <div class="headline">trackerofthings</div>
+        <div class="headline text-decoration-overline">trvcker</div>
       </v-sheet>
 
       <v-divider></v-divider>
@@ -22,6 +22,11 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block @click="logout"> Logout </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-main>
@@ -31,7 +36,6 @@
       <v-col class="text-center" cols="12">
         <v-icon size="24px" @click="ghub">mdi-github</v-icon>
 
-        <v-icon size="24px" @click="logout">mdi-logout</v-icon>
         <!-- {{ new Date().getFullYear() }} — <strong>trackerofbugs</strong>-->
       </v-col>
     </v-footer>
@@ -50,7 +54,7 @@ export default {
       this.$router.push("/login");
     },
     ghub() {
-      window.open("https://github.com/sqmch", "_blank");
+      window.open("https://github.com/sqmch/trvcker", "_blank");
     },
   },
 };

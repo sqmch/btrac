@@ -1,5 +1,8 @@
 <template>
   <v-data-table
+    item-key="title"
+    :loading="projectsLoading"
+    loading-text="Loading... Please wait"
     :headers="headers"
     :items="projects"
     @click:row="handleRowClick"
@@ -32,8 +35,10 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+              <v-btn color="primary darken-1" text @click="close">
+                Cancel
+              </v-btn>
+              <v-btn color="primary darken-1" text @click="save"> Save </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -57,13 +62,10 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editProject(item)">
+      <v-icon small class="mr-2" @click.stop="editProject(item)">
         mdi-pencil
       </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <h2>Something went wrong fetching the data, please try again.</h2>
+      <v-icon small @click.stop="deleteItem(item)"> mdi-delete </v-icon>
     </template>
   </v-data-table>
 </template>
@@ -73,6 +75,7 @@ import axios from "axios";
 import { mapMutations } from "vuex";
 export default {
   data: () => ({
+    projectsLoading: false,
     dialog: false,
     dialogDelete: false,
     headers: [
@@ -115,12 +118,14 @@ export default {
   methods: {
     ...mapMutations(["SET_PROJECT_ID"]),
     getProjects() {
+      this.projectsLoading = true;
       axios
         .get("/projects", {
           headers: { Authorization: "Bearer " + this.$store.state.token },
         })
         .then((response) => {
           this.projects = response.data.Projects;
+          this.projectsLoading = false;
         })
         .catch((e) => {
           console.log(e);

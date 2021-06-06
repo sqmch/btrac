@@ -5,8 +5,8 @@
         <v-card elevation="12" max-width="500" class="mx-auto mt-16">
           <v-card-title>
             <v-layout align-center justify-space-between>
-              <h2 class="mb-4 ml-2 mt-2">trackerofbugs</h2>
-
+              <h2 class="mb-4 ml-2 mt-2 text-decoration-overline">trvcker</h2>
+              <h4 class="mb-4 ml-2 mt-2 font-weight-thin">login</h4>
               <v-flex> </v-flex>
             </v-layout>
           </v-card-title>
@@ -30,10 +30,10 @@
               ></v-text-field>
               <v-btn color="primary" class="mr-4" @click="submit">
                 login
-                <v-icon right dark> mdi-lock </v-icon>
+                <v-icon right dark> mdi-login </v-icon>
               </v-btn>
 
-              <v-btn depressed @click="reg"> register </v-btn>
+              <v-btn depressed @click="toRegister"> register </v-btn>
             </v-col>
           </v-col>
         </v-card>
@@ -57,6 +57,7 @@ export default {
   },
 
   data: () => ({
+    alert: true,
     email: "",
     password: "",
   }),
@@ -110,7 +111,7 @@ export default {
           console.log(error);
         });
     },
-    reg() {
+    toRegister() {
       this.$router.push("/register");
     },
   },

@@ -13,7 +13,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Tasks</v-toolbar-title>
+            <v-toolbar-title>Projects</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
@@ -41,26 +41,28 @@
                   Add Project
                 </v-btn>
               </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
+              <draggable v-model="projects" class="row">
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
 
-                <v-card-text>
-                  <v-container>
-                    <v-text-field
-                      v-model="editedItem.title"
-                      label="Title"
-                    ></v-text-field>
-                  </v-container>
-                </v-card-text>
+                  <v-card-text>
+                    <v-container>
+                      <v-text-field
+                        v-model="editedItem.title"
+                        label="Title"
+                      ></v-text-field>
+                    </v-container>
+                  </v-card-text>
 
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary " text @click="close"> Cancel </v-btn>
-                  <v-btn color="primary " text @click="save"> Save </v-btn>
-                </v-card-actions>
-              </v-card>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary " text @click="close"> Cancel </v-btn>
+                    <v-btn color="primary " text @click="save"> Save </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </draggable>
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="500px">
               <v-card>
@@ -90,25 +92,29 @@
       </v-data-table>
       <v-spacer></v-spacer>
     </v-card>
-    <v-expansion-panels transition="slide-x-transition" focusable multiple>
-      <draggable v-model="projects" class="row">
-        <v-expansion-panel v-for="project in projects" :key="project.id">
-          <v-expansion-panel-header>
-            {{ project.title }}
-          </v-expansion-panel-header>
-          <v-expansion-panel-content
-            ><div class="py-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </div>
-            <v-spacer></v-spacer>
-            <v-btn class="mt-5">test</v-btn>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </draggable>
-    </v-expansion-panels>
+    <v-card class="d-flex pa-6 my-2 mx-2" outlined tile>
+      <v-expansion-panels transition="slide-x-transition" focusable multiple>
+        <draggable v-model="projects" class="row">
+          <v-expansion-panel v-for="project in projects" :key="project.id">
+            <v-expansion-panel-header>
+              {{ project.title }}
+            </v-expansion-panel-header>
+            <v-expansion-panel-content
+              ><div class="py-4">Some sort of a project description.</div>
+              <v-btn
+                color="primary"
+                class="my-2"
+                @click="openProject(project.id)"
+                ><v-icon left> mdi-format-list-checks </v-icon>Open</v-btn
+              >
+              <v-btn text class="my-2 mx-2"
+                ><v-icon left> mdi-delete </v-icon>Delete</v-btn
+              >
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </draggable>
+      </v-expansion-panels></v-card
+    >
   </div>
 </template>
 <script>
@@ -262,6 +268,10 @@ export default {
     },
     handleRowClick(row) {
       this.SET_PROJECT_ID(row.id);
+      this.$router.push("/projects/issues");
+    },
+    openProject(id) {
+      this.SET_PROJECT_ID(id);
       this.$router.push("/projects/issues");
     },
   },

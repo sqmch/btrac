@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer app prominent dark>
+    <v-navigation-drawer app prominent>
       <v-sheet class="pa-4">
         <div class="headline text-decoration-overline">trvcker</div>
       </v-sheet>

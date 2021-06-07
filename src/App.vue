@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer app dark permanent>
+    <v-navigation-drawer app prominent dark>
       <v-sheet class="pa-4">
         <div class="headline text-decoration-overline">trvcker</div>
       </v-sheet>
@@ -23,6 +23,7 @@
         </v-list-item>
       </v-list>
       <template v-slot:append>
+        <div class="h3 mx-4">{{ user }}</div>
         <div class="pa-2">
           <v-btn block @click="logout"> Logout </v-btn>
         </div>
@@ -43,19 +44,28 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data: () => ({
     links: [["mdi-folder-multiple", "Projects", "/projects"]],
+    user: "",
   }),
   methods: {
+    ...mapGetters(["getUser"]),
+
     logout() {
       this.$store.commit("REMOVE_TOKEN");
       this.$store.commit("REMOVE_USER");
       this.$router.push("/login");
+      this.user = "";
     },
     ghub() {
       window.open("https://github.com/sqmch/trvcker", "_blank");
     },
+  },
+  mounted() {
+    this.user = this.$store.state.user;
   },
 };
 </script>

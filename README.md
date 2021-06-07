@@ -24,7 +24,7 @@ npm run serve
 Create a virtual environment in .\backend and activate it:
 ```
 cd backend
-py -m venv venv
+python -m venv venv
 .\venv\Scripts\activate
 ```
 Install backend dependencies:
@@ -33,5 +33,5 @@ pip install -r requirements.txt
 ```
 Run the flask server
 ```python
-py api.py
+python api.py
 ```

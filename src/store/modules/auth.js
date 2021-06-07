@@ -1,6 +1,6 @@
 const state = {
 	token: null,
-	user: "",
+	user: "asd",
 };
 const getters = {};
 const actions = {};

@@ -17,6 +17,8 @@
                 :error-messages="emailErrors"
                 label="E-mail"
                 required
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
               ></v-text-field>
             </v-col>
             <v-col class="mx-auto" cols="12" sm="10">
@@ -27,6 +29,8 @@
                 v-model="password"
                 label="Password"
                 required
+                @input="$v.password.$touch()"
+                @blur="$v.password.$touch()"
               ></v-text-field>
               <v-btn color="primary" class="mr-4" @click="submit">
                 login
@@ -36,6 +40,23 @@
               <v-btn depressed @click="toRegister"> register </v-btn>
             </v-col>
           </v-col>
+          <!-- experimenting with drag and drop
+          <v-expansion-panels>
+            <draggable v-model="items" class="row">
+              <v-expansion-panel v-for="item in items" :key="item.id">
+                <v-expansion-panel-header>
+                  {{ item.title }}
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </draggable>
+          </v-expansion-panels>
+           -->
         </v-card>
       </v-container>
     </v-form>
@@ -47,16 +68,27 @@ import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import axios from "axios";
 import { mapMutations } from "vuex";
+//import draggable from "vuedraggable";
 
 export default {
   mixins: [validationMixin],
+  //components: {
+  //draggable,
 
+  //},
   validations: {
     email: { required, email },
     password: { required },
   },
 
   data: () => ({
+    items: [
+      { id: 1, title: "abc" },
+      { id: 3, title: "ghi" },
+      { id: 4, title: "jkl" },
+      { id: 5, title: "mno" },
+      { id: 2, title: "def" },
+    ],
     alert: true,
     email: "",
     password: "",

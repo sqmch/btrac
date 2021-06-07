@@ -50,6 +50,7 @@ def register():
         db.session.commit()
     except Exception as e:
         print(e)
+        return jsonify(user.to_dict()), 500
     return jsonify(user.to_dict()), 201
 
 

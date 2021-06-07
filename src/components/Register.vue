@@ -11,6 +11,7 @@
               <v-flex> </v-flex>
             </v-layout>
           </v-card-title>
+
           <v-col>
             <v-col class="mx-auto" cols="12" sm="10">
               <v-text-field
@@ -18,6 +19,8 @@
                 :error-messages="emailErrors"
                 label="E-mail"
                 required
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
               ></v-text-field>
             </v-col>
             <v-col class="mx-auto" cols="12" sm="10">
@@ -28,21 +31,23 @@
                 v-model="password"
                 label="Password"
                 required
+                @input="$v.password.$touch()"
+                @blur="$v.password.$touch()"
+              ></v-text-field>
+              <v-text-field
+                class="mb-6"
+                type="password"
+                :error-messages="repasswordErrors"
+                v-model="repassword"
+                label="Re-type password"
+                required
               ></v-text-field>
               <v-btn color="primary" class="mr-4" @click="submit">
                 register
                 <v-icon right dark> mdi-account-plus </v-icon>
               </v-btn>
 
-              <v-btn
-                depressed
-                @click="
-                  toLogin;
-                  showAlert;
-                "
-              >
-                login
-              </v-btn>
+              <v-btn depressed @click="toLogin"> login </v-btn>
             </v-col>
           </v-col>
         </v-card>
@@ -54,7 +59,7 @@
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
+import { required, email, minLength } from "vuelidate/lib/validators";
 import axios from "axios";
 
 export default {
@@ -62,13 +67,15 @@ export default {
 
   validations: {
     email: { required, email },
-    password: { required },
+    password: { required, minLength: minLength(6) },
   },
 
   data: () => ({
     email: "",
     password: "",
+    repassword: "",
     type: null,
+
     elapse: null,
   }),
 
@@ -83,11 +90,16 @@ export default {
     },
     passwordErrors() {
       const passwordErrors = [];
-      if (!this.$v.password.$dirty) return passwordErrors;
-      !this.$v.password.password &&
-        passwordErrors.push("Must enter a valid password");
       !this.$v.password.required && passwordErrors.push("Password is required");
       return passwordErrors;
+    },
+    repasswordErrors() {
+      const repasswordErrors = [];
+      if (this.password !== this.repassword) {
+        repasswordErrors.push("Passwords don't match");
+      }
+
+      return repasswordErrors;
     },
   },
 
@@ -97,17 +109,30 @@ export default {
       this.register();
     },
     toLogin() {
-      this.$router.push("/");
+      this.$router.push("/login");
     },
     register() {
-      axios
-        .post("http://127.0.0.1:1234/register", {
-          email: this.email,
-          password: this.password,
-        })
-        .then(() => {
-          this.$router.push("/login");
-        });
+      if (
+        this.email.length > 5 &&
+        this.password.length > 6 &&
+        this.repassword === this.password
+      ) {
+        alert("Registered!");
+        axios
+          .post("http://127.0.0.1:1234/register", {
+            email: this.email,
+            password: this.password,
+          })
+          .then(() => {
+            //this.toLogin();
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .then(() => {
+            this.toLogin();
+          });
+      }
     },
     showAlert(type) {
       this.type = type;

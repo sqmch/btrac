@@ -7,7 +7,11 @@ Vue.use(Vuex);
 const state = {
 	project_id: null,
 };
-const getters = {};
+const getters = {
+	getUser: (state) => {
+		return state.user
+	},
+};
 const mutations = {
 	SET_TOKEN(state, payload) {
 		state.token = payload.token;

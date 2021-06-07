@@ -10,8 +10,21 @@
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>Tasks</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+        <v-divider class="mx-4" inset vertical></v-divider>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
@@ -55,8 +68,8 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+              <v-btn color="primary " text @click="close"> Cancel </v-btn>
+              <v-btn color="primary " text @click="save"> Save </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -67,12 +80,8 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete"
-                >Cancel</v-btn
-              >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                >OK</v-btn
-              >
+              <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="primary " text @click="deleteItemConfirm">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -89,6 +98,7 @@
 import axios from "axios";
 export default {
   data: () => ({
+    search: "",
     issuesLoading: false,
     dialog: false,
     dialogDelete: false,

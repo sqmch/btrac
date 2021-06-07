@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <v-data-table
+      <!-- <v-data-table
         item-key="title"
         :loading="issuesLoading"
         loading-text="Loading... Please wait"
@@ -11,7 +11,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Tasks</v-toolbar-title>
+            <v-toolbar-title>Tracked items</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
@@ -36,7 +36,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  Add Issue
+                  Add item
                 </v-btn>
                 <v-btn dark class="mb-2 mr-5" to="/projects">
                   Back to projects</v-btn
@@ -82,17 +82,23 @@
               </v-card>
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="500px">
-              <v-card>
-                <v-card-title class="headline"
-                  >Are you sure you want to delete this item?</v-card-title
+              <v-card class="pa-4">
+                <v-card-title class="headline">Delete</v-card-title>
+                <v-card-text
+                  >Are you sure you want to delete this item?</v-card-text
                 >
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="primary " text @click="closeDelete"
+
+                  <v-btn class="mx-4" color="primary " text @click="closeDelete"
                     >Cancel</v-btn
                   >
-                  <v-btn color="primary " text @click="deleteItemConfirm"
-                    >OK</v-btn
+                  <v-btn
+                    class="mx-4"
+                    color="primary "
+                    text
+                    @click="deleteItemConfirm"
+                    >Delete</v-btn
                   >
                   <v-spacer></v-spacer>
                 </v-card-actions>
@@ -106,7 +112,94 @@
           </v-icon>
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
-      </v-data-table>
+      </v-data-table>-->
+      <v-toolbar flat>
+        <v-toolbar-title>Items</v-toolbar-title>
+        <v-divider class="mx-8" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template class="float-right" v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2 float-right"
+              v-bind="attrs"
+              v-on="on"
+            >
+              Add item
+            </v-btn>
+            <v-btn dark class="mb-2 mr-5" to="/projects">
+              Back to projects</v-btn
+            >
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-text-field
+                  v-model="editedItem.title"
+                  label="Title"
+                ></v-text-field>
+
+                <v-textarea
+                  name="Details"
+                  v-model="editedItem.details"
+                  label="Details"
+                ></v-textarea>
+                <v-select
+                  v-model="editedItem.priority"
+                  label="Priority"
+                  :items="priorities"
+                  outlined
+                ></v-select>
+                <v-select
+                  :items="statuses"
+                  v-model="editedItem.status"
+                  label="Status"
+                  outlined
+                ></v-select>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary " text @click="close"> Cancel </v-btn>
+              <v-btn color="primary " text @click="save"> Save </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card class="pa-4">
+            <v-card-title class="headline">Delete</v-card-title>
+            <v-card-text
+              >Are you sure you want to delete this item?</v-card-text
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn class="mx-4" color="primary " text @click="closeDelete"
+                >Cancel</v-btn
+              >
+              <v-btn
+                class="mx-4"
+                color="primary "
+                text
+                @click="deleteItemConfirm"
+                >Delete</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
     </v-card>
 
     <v-card class="mx-4 my-4">

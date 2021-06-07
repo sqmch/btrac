@@ -121,7 +121,9 @@ class Issue(db.Model):
         """get issue using the id as parameter"""
         return [Issue.json(Issue.query.filter_by(id=_id).first())]
 
-    def update_issue(_title: str, _details: str, _status: str, _priority: str):
+    def update_issue(
+        _id: int, _title: str, _details: str, _status: str, _priority: str
+    ):
         """update an issue"""
         issue = Issue.query.filter_by(id=_id).first()
         # issue.date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")

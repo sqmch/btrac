@@ -116,7 +116,10 @@
     <v-card>
       <v-toolbar flat>
         <v-toolbar-title>Items</v-toolbar-title>
-        <v-divider class="mx-8" inset vertical></v-divider>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-btn icon plain to="/projects">
+          <v-icon>mdi-arrow-left</v-icon></v-btn
+        >
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
@@ -125,18 +128,9 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template class="float-right" v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              dark
-              class="mb-2 float-right"
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
               Add item
             </v-btn>
-            <v-btn dark class="mb-2 mr-5" to="/projects">
-              Back to projects</v-btn
-            >
           </template>
           <v-card>
             <v-card-title>
@@ -202,12 +196,64 @@
         </v-dialog>
       </v-toolbar>
     </v-card>
+    <!-- main body -->
     <v-row>
-      <v-col class="col-10">
+      <v-col class="col-12">
         <v-container>
           <v-card>
             <v-toolbar flat>
-              <v-toolbar-title>Open</v-toolbar-title>
+              <v-toolbar-title> Open </v-toolbar-title>
+
+              <v-btn class="mx-2" color="secondary" small fab text>
+                {{ this.open_issues.length }}</v-btn
+              >
+              <v-divider class="mx-2" inset vertical></v-divider>
+
+              <v-dialog v-model="dialog" max-width="500px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="secondary" text fab v-bind="attrs" v-on="on">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-container>
+                      <v-text-field
+                        v-model="editedItem.title"
+                        label="Title"
+                      ></v-text-field>
+
+                      <v-textarea
+                        name="Details"
+                        v-model="editedItem.details"
+                        label="Details"
+                      ></v-textarea>
+                      <v-select
+                        v-model="editedItem.priority"
+                        label="Priority"
+                        :items="priorities"
+                        outlined
+                      ></v-select>
+                      <v-select
+                        :items="statuses"
+                        v-model="editedItem.status"
+                        label="Status"
+                        outlined
+                      ></v-select>
+                    </v-container>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary " text @click="close"> Cancel </v-btn>
+                    <v-btn color="primary " text @click="save"> Save </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-toolbar>
             <v-expansion-panels
               popout
@@ -215,7 +261,14 @@
               class="mx-auto pa-6 my-2 ml-2"
               elevation="2"
             >
-              <draggable shaped v-model="open_issues" class="row">
+              <draggable
+                group="issues"
+                :list="open_issues"
+                class="row list-group-item"
+                @start="drag = true"
+                @end="drag = false"
+                @change="log"
+              >
                 <v-expansion-panel v-for="issue in open_issues" :key="issue.id">
                   <v-expansion-panel-header>
                     {{ issue.title }}
@@ -242,7 +295,59 @@
           </v-card>
           <v-card
             ><v-toolbar flat>
-              <v-toolbar-title>In progress</v-toolbar-title>
+              <v-toolbar-title> In Progress </v-toolbar-title>
+
+              <v-btn class="mx-2" color="secondary" small fab text>
+                {{ this.inprogress_issues.length }}</v-btn
+              >
+              <v-divider class="mx-2" inset vertical></v-divider>
+
+              <v-dialog v-model="dialog" max-width="500px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="secondary" text fab v-bind="attrs" v-on="on">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-container>
+                      <v-text-field
+                        v-model="editedItem.title"
+                        label="Title"
+                      ></v-text-field>
+
+                      <v-textarea
+                        name="Details"
+                        v-model="editedItem.details"
+                        label="Details"
+                      ></v-textarea>
+                      <v-select
+                        v-model="editedItem.priority"
+                        label="Priority"
+                        :items="priorities"
+                        outlined
+                      ></v-select>
+                      <v-select
+                        :items="statuses"
+                        v-model="editedItem.status"
+                        label="Status"
+                        outlined
+                      ></v-select>
+                    </v-container>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary " text @click="close"> Cancel </v-btn>
+                    <v-btn color="primary " text @click="save"> Save </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-toolbar>
             <v-expansion-panels
               popout
@@ -250,7 +355,15 @@
               class="mx-auto pa-6 my-2 ml-2"
               elevation="2"
             >
-              <draggable shaped v-model="inprogress_issues" class="row">
+              <draggable
+                group="issues"
+                :list="inprogress_issues"
+                shaped
+                class="row list-group-item"
+                @start="drag = true"
+                @end="drag = false"
+                @change="listChange"
+              >
                 <v-expansion-panel
                   v-for="issue in inprogress_issues"
                   :key="issue.id"
@@ -280,7 +393,14 @@
           </v-card>
           <v-card>
             <v-toolbar flat>
-              <v-toolbar-title>Resolved</v-toolbar-title>
+              <v-toolbar-title>
+                <v-icon color="green">mdi-check</v-icon>
+                Resolved
+              </v-toolbar-title>
+
+              <v-btn class="mx-2" color="green" small fab text>
+                {{ this.resolved_issues.length }}</v-btn
+              >
             </v-toolbar>
             <v-expansion-panels
               popout
@@ -288,7 +408,13 @@
               class="mx-auto pa-6 my-2 ml-2"
               elevation="2"
             >
-              <draggable shaped v-model="resolved_issues" class="row">
+              <draggable
+                group="issues"
+                :list="resolved_issues"
+                shaped
+                class="row"
+                @change="log"
+              >
                 <v-expansion-panel
                   v-for="issue in resolved_issues"
                   :key="issue.id"
@@ -316,25 +442,8 @@
               </draggable>
             </v-expansion-panels>
           </v-card>
-        </v-container> </v-col
-      ><v-col class="col-2">
-        <v-card class="mt-3 mr-8">
-          <v-toolbar flat>
-            <v-toolbar-title>Project</v-toolbar-title>
-          </v-toolbar>
-          <v-list dense>
-            <v-list-item>
-              <v-list-item-content>
-                <div>
-                  {{ this.open_issues.length + this.inprogress_issues.length }}
-                  unresolved items
-                </div>
-                <div>{{ this.resolved_issues.length }} resolved items</div>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card></v-col
-      >
+        </v-container>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -347,6 +456,7 @@ export default {
     draggable,
   },
   data: () => ({
+    hover: false,
     search: "",
     issuesLoading: false,
     dialog: false,
@@ -387,6 +497,14 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "Add Task" : "Edit Task";
+    },
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost",
+      };
     },
   },
 
@@ -456,15 +574,6 @@ export default {
         console.log(e);
         this.getIssues();
       });
-      /*axios
-        .put(`/issues/${this.editedItem.id}`, this.editedItem, {
-          headers: { Authorization: "Bearer " + this.$store.state.token },
-        })
-        .then(console.log(this.editedItem)).catch((e) => {
-        console.log(e);
-      });
-
-        */
     },
 
     editIssue(item) {
@@ -519,6 +628,25 @@ export default {
         this.getIssues();
       }
       this.close();
+    },
+    listChange() {
+      //this.hover = true;
+      console.log("lol");
+      //console.log(this.hover);
+    },
+    add: function () {
+      this.list.push({ name: "Juan" });
+    },
+    replace: function () {
+      this.list = [{ name: "Edgard" }];
+    },
+    clone: function (el) {
+      return {
+        name: el.name + " cloned",
+      };
+    },
+    log: function () {
+      window.console.log("lol");
     },
   },
 };

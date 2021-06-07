@@ -168,6 +168,7 @@
             <v-expansion-panel-content>
               <div class="py-4">Some sort of a project description.</div>
               <v-btn
+                large
                 color="primary"
                 class="my-2"
                 @click="openProject(project.id)"

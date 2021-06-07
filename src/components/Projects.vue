@@ -156,15 +156,12 @@
       </v-toolbar>
     </v-card>
     <v-card class="mx-4 my-4">
-      <v-card-title>Projects</v-card-title>
-      <v-expansion-panels
-        popout
-        focusable
-        class="mx-auto pa-6 my-2 mx-2"
-        elevation="2"
-      >
+      <v-toolbar flat>
+        <v-toolbar-title>Recent</v-toolbar-title>
+      </v-toolbar>
+      <v-expansion-panels flat focusable class="pa-6 my-2 mx-2" elevation="0">
         <draggable shaped v-model="projects" class="row">
-          <v-expansion-panel v-for="project in projects" :key="project.id">
+          <v-expansion-panel flat v-for="project in projects" :key="project.id">
             <v-expansion-panel-header>
               {{ project.title }}
             </v-expansion-panel-header>

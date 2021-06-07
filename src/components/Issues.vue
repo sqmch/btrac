@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card>
-      <!-- <v-data-table
+    <!--
+        <v-card><v-data-table
         item-key="title"
         :loading="issuesLoading"
         loading-text="Loading... Please wait"
@@ -113,6 +113,7 @@
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
       </v-data-table>-->
+    <v-card>
       <v-toolbar flat>
         <v-toolbar-title>Items</v-toolbar-title>
         <v-divider class="mx-8" inset vertical></v-divider>
@@ -201,40 +202,140 @@
         </v-dialog>
       </v-toolbar>
     </v-card>
+    <v-row>
+      <v-col class="col-10">
+        <v-container>
+          <v-card>
+            <v-toolbar flat>
+              <v-toolbar-title>Open</v-toolbar-title>
+            </v-toolbar>
+            <v-expansion-panels
+              popout
+              focusable
+              class="mx-auto pa-6 my-2 ml-2"
+              elevation="2"
+            >
+              <draggable shaped v-model="open_issues" class="row">
+                <v-expansion-panel v-for="issue in open_issues" :key="issue.id">
+                  <v-expansion-panel-header>
+                    {{ issue.title }}
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <div class="py-4">{{ issue.details }}</div>
 
-    <v-card class="mx-4 my-4">
-      <v-card-title>Items</v-card-title>
-      <v-expansion-panels
-        popout
-        focusable
-        class="mx-auto pa-6 my-2 mx-2"
-        elevation="2"
+                    <v-btn
+                      icon
+                      class="my-2 mx-2 float-right"
+                      @click="deleteItem(issue)"
+                      ><v-icon> mdi-delete </v-icon></v-btn
+                    >
+                    <v-btn
+                      icon
+                      class="my-2 mx-2 float-right"
+                      @click="editIssue(issue)"
+                      ><v-icon> mdi-pencil </v-icon></v-btn
+                    >
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </draggable>
+            </v-expansion-panels>
+          </v-card>
+          <v-card
+            ><v-toolbar flat>
+              <v-toolbar-title>In progress</v-toolbar-title>
+            </v-toolbar>
+            <v-expansion-panels
+              popout
+              focusable
+              class="mx-auto pa-6 my-2 ml-2"
+              elevation="2"
+            >
+              <draggable shaped v-model="inprogress_issues" class="row">
+                <v-expansion-panel
+                  v-for="issue in inprogress_issues"
+                  :key="issue.id"
+                >
+                  <v-expansion-panel-header>
+                    {{ issue.title }}
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <div class="py-4">{{ issue.details }}</div>
+
+                    <v-btn
+                      icon
+                      class="my-2 mx-2 float-right"
+                      @click="deleteItem(issue)"
+                      ><v-icon> mdi-delete </v-icon></v-btn
+                    >
+                    <v-btn
+                      icon
+                      class="my-2 mx-2 float-right"
+                      @click="editIssue(issue)"
+                      ><v-icon> mdi-pencil </v-icon></v-btn
+                    >
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </draggable>
+            </v-expansion-panels>
+          </v-card>
+          <v-card>
+            <v-toolbar flat>
+              <v-toolbar-title>Resolved</v-toolbar-title>
+            </v-toolbar>
+            <v-expansion-panels
+              popout
+              focusable
+              class="mx-auto pa-6 my-2 ml-2"
+              elevation="2"
+            >
+              <draggable shaped v-model="resolved_issues" class="row">
+                <v-expansion-panel
+                  v-for="issue in resolved_issues"
+                  :key="issue.id"
+                >
+                  <v-expansion-panel-header>
+                    {{ issue.title }}
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <div class="py-4">{{ issue.details }}</div>
+
+                    <v-btn
+                      icon
+                      class="my-2 mx-2 float-right"
+                      @click="deleteItem(issue)"
+                      ><v-icon> mdi-delete </v-icon></v-btn
+                    >
+                    <v-btn
+                      icon
+                      class="my-2 mx-2 float-right"
+                      @click="editIssue(issue)"
+                      ><v-icon> mdi-pencil </v-icon></v-btn
+                    >
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </draggable>
+            </v-expansion-panels>
+          </v-card>
+        </v-container> </v-col
+      ><v-col class="col-2">
+        <v-card class="mt-3 mr-8">
+          <v-toolbar flat>
+            <v-toolbar-title>Project</v-toolbar-title>
+          </v-toolbar>
+          <v-list dense>
+            <v-list-item>
+              <v-list-item-content>
+                <div>
+                  {{ this.open_issues.length + this.inprogress_issues.length }}
+                  unresolved items
+                </div>
+                <div>{{ this.resolved_issues.length }} resolved items</div>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card></v-col
       >
-        <draggable shaped v-model="issues" class="row">
-          <v-expansion-panel v-for="issue in issues" :key="issue.id">
-            <v-expansion-panel-header>
-              {{ issue.title }}
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <div class="py-4">{{ issue.details }}</div>
-
-              <v-btn
-                icon
-                class="my-2 mx-2 float-right"
-                @click="deleteItem(issue)"
-                ><v-icon> mdi-delete </v-icon></v-btn
-              >
-              <v-btn
-                icon
-                class="my-2 mx-2 float-right"
-                @click="editIssue(issue)"
-                ><v-icon> mdi-pencil </v-icon></v-btn
-              >
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </draggable>
-      </v-expansion-panels>
-    </v-card>
+    </v-row>
   </div>
 </template>
 <script>
@@ -264,6 +365,9 @@ export default {
     statuses: ["Open", "In Progress", "Resolved"],
     priorities: ["Low", "Medium", "High"],
     issues: [],
+    open_issues: [],
+    inprogress_issues: [],
+    resolved_issues: [],
     editedIndex: -1,
     editedItem: {
       title: "",
@@ -308,6 +412,15 @@ export default {
         })
         .then((response) => {
           this.issues = response.data.Issues;
+          this.open_issues = this.issues.filter((issue) =>
+            issue.status.includes("Open")
+          );
+          this.inprogress_issues = this.issues.filter((issue) =>
+            issue.status.includes("In Progress")
+          );
+          this.resolved_issues = this.issues.filter((issue) =>
+            issue.status.includes("Resolved")
+          );
           this.issuesLoading = false;
         })
         .catch((e) => {
@@ -326,6 +439,7 @@ export default {
         .then(
           (response) => {
             console.log(response);
+            this.getIssues();
           },
           (error) => {
             console.log(error);
@@ -340,6 +454,7 @@ export default {
         data: this.editedItem,
       }).catch((e) => {
         console.log(e);
+        this.getIssues();
       });
       /*axios
         .put(`/issues/${this.editedItem.id}`, this.editedItem, {
@@ -374,6 +489,7 @@ export default {
           console.log(e);
         });
       this.closeDelete();
+      this.getIssues();
     },
 
     close() {
@@ -396,9 +512,11 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.issues[this.editedIndex], this.editedItem);
         this.putIssue();
+        this.getIssues();
       } else {
         this.issues.push(this.editedItem);
         this.addIssue();
+        this.getIssues();
       }
       this.close();
     },

@@ -41,41 +41,45 @@
                   Add Project
                 </v-btn>
               </template>
-              <draggable v-model="projects" class="row">
-                <v-card>
-                  <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
-                  </v-card-title>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Edit</span>
+                </v-card-title>
 
-                  <v-card-text>
-                    <v-container>
-                      <v-text-field
-                        v-model="editedItem.title"
-                        label="Title"
-                      ></v-text-field>
-                    </v-container>
-                  </v-card-text>
+                <v-card-text>
+                  <v-container>
+                    <v-text-field
+                      v-model="editedItem.title"
+                      label="Title"
+                    ></v-text-field>
+                  </v-container>
+                </v-card-text>
 
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary " text @click="close"> Cancel </v-btn>
-                    <v-btn color="primary " text @click="save"> Save </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </draggable>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary " text @click="close"> Cancel </v-btn>
+                  <v-btn color="primary " text @click="save"> Save </v-btn>
+                </v-card-actions>
+              </v-card>
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="500px">
-              <v-card>
-                <v-card-title class="headline"
-                  >Are you sure you want to delete this project?</v-card-title
+              <v-card class="pa-4">
+                <v-card-title class="headline">Delete</v-card-title>
+                <v-card-text
+                  >Are you sure you want to delete this project?</v-card-text
                 >
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="primary " text @click="closeDelete"
+
+                  <v-btn class="mx-4" color="primary " text @click="closeDelete"
                     >Cancel</v-btn
                   >
-                  <v-btn color="primary " text @click="deleteItemConfirm"
-                    >OK</v-btn
+                  <v-btn
+                    class="mx-4"
+                    color="primary "
+                    text
+                    @click="deleteItemConfirm"
+                    >Delete</v-btn
                   >
                   <v-spacer></v-spacer>
                 </v-card-actions>
@@ -90,31 +94,45 @@
           <v-icon small @click.stop="deleteItem(item)"> mdi-delete </v-icon>
         </template>
       </v-data-table>
-      <v-spacer></v-spacer>
     </v-card>
-    <v-card class="d-flex pa-6 my-2 mx-2" outlined tile>
-      <v-expansion-panels transition="slide-x-transition" focusable multiple>
-        <draggable v-model="projects" class="row">
+    <v-card class="mx-4 my-4">
+      <v-card-title>Projects</v-card-title>
+      <v-expansion-panels
+        popout
+        focusable
+        class="mx-auto pa-6 my-2 mx-2"
+        elevation="2"
+      >
+        <draggable shaped v-model="projects" class="row">
           <v-expansion-panel v-for="project in projects" :key="project.id">
             <v-expansion-panel-header>
               {{ project.title }}
             </v-expansion-panel-header>
-            <v-expansion-panel-content
-              ><div class="py-4">Some sort of a project description.</div>
+            <v-expansion-panel-content>
+              <div class="py-4">Some sort of a project description.</div>
               <v-btn
                 color="primary"
                 class="my-2"
                 @click="openProject(project.id)"
                 ><v-icon left> mdi-format-list-checks </v-icon>Open</v-btn
               >
-              <v-btn text class="my-2 mx-2"
-                ><v-icon left> mdi-delete </v-icon>Delete</v-btn
+              <v-btn
+                icon
+                class="my-2 mx-2 float-right"
+                @click="deleteItem(project)"
+                ><v-icon> mdi-delete </v-icon></v-btn
+              >
+              <v-btn
+                icon
+                class="my-2 mx-2 float-right"
+                @click="editProject(project)"
+                ><v-icon> mdi-pencil </v-icon></v-btn
               >
             </v-expansion-panel-content>
           </v-expansion-panel>
         </draggable>
-      </v-expansion-panels></v-card
-    >
+      </v-expansion-panels>
+    </v-card>
   </div>
 </template>
 <script>
@@ -224,6 +242,7 @@ export default {
 
     deleteItem(item) {
       this.editedIndex = this.projects.indexOf(item);
+
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },

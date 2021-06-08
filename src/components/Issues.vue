@@ -113,7 +113,7 @@
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
       </v-data-table>-->
-    <v-card>
+    <v-card flat>
       <v-toolbar flat>
         <v-toolbar-title>Items</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
@@ -128,8 +128,8 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template class="float-right" v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              Add item
+            <v-btn large color="primary" dark class="" v-bind="attrs" v-on="on">
+              <v-icon class="mr-2">mdi-plus</v-icon>Add task
             </v-btn>
           </template>
           <v-card>
@@ -198,15 +198,20 @@
     </v-card>
     <!-- main body -->
     <v-row>
-      <v-col class="col-12">
-        <v-container>
-          <v-card>
-            <v-toolbar flat>
-              <v-toolbar-title> Open </v-toolbar-title>
+      <v-col class="pa-2 col-12">
+        <v-container flat>
+          <v-card flat class="">
+            <v-toolbar class="" flat
+              ><container width="300">
+                <v-toolbar-title>
+                  <v-icon class="mr-3">mdi-format-list-checks</v-icon> Task
+                </v-toolbar-title></container
+              >
 
               <v-btn class="mx-2" color="secondary" small fab text>
                 {{ this.open_issues.length }}</v-btn
               >
+
               <v-divider class="mx-2" inset vertical></v-divider>
 
               <v-dialog v-model="dialog" max-width="500px">
@@ -255,190 +260,125 @@
                 </v-card>
               </v-dialog>
             </v-toolbar>
-            <v-expansion-panels
-              popout
-              focusable
-              class="mx-auto pa-6 my-2 ml-2"
-              elevation="2"
-            >
+            <v-expansion-panels flat focusable class="my-2 pa-0">
               <draggable
+                :empty-insert-threshold="200"
                 group="issues"
                 :list="open_issues"
-                class="row list-group-item"
-                @start="drag = true"
-                @end="drag = false"
-                @change="log"
-              >
-                <v-expansion-panel v-for="issue in open_issues" :key="issue.id">
-                  <v-expansion-panel-header>
-                    {{ issue.title }}
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <div class="py-4">{{ issue.details }}</div>
-
-                    <v-btn
-                      icon
-                      class="my-2 mx-2 float-right"
-                      @click="deleteItem(issue)"
-                      ><v-icon> mdi-delete </v-icon></v-btn
-                    >
-                    <v-btn
-                      icon
-                      class="my-2 mx-2 float-right"
-                      @click="editIssue(issue)"
-                      ><v-icon> mdi-pencil </v-icon></v-btn
-                    >
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </draggable>
-            </v-expansion-panels>
-          </v-card>
-          <v-card
-            ><v-toolbar flat>
-              <v-toolbar-title> In Progress </v-toolbar-title>
-
-              <v-btn class="mx-2" color="secondary" small fab text>
-                {{ this.inprogress_issues.length }}</v-btn
-              >
-              <v-divider class="mx-2" inset vertical></v-divider>
-
-              <v-dialog v-model="dialog" max-width="500px">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="secondary" text fab v-bind="attrs" v-on="on">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                </template>
-
-                <v-card>
-                  <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
-                  </v-card-title>
-
-                  <v-card-text>
-                    <v-container>
-                      <v-text-field
-                        v-model="editedItem.title"
-                        label="Title"
-                      ></v-text-field>
-
-                      <v-textarea
-                        name="Details"
-                        v-model="editedItem.details"
-                        label="Details"
-                      ></v-textarea>
-                      <v-select
-                        v-model="editedItem.priority"
-                        label="Priority"
-                        :items="priorities"
-                        outlined
-                      ></v-select>
-                      <v-select
-                        :items="statuses"
-                        v-model="editedItem.status"
-                        label="Status"
-                        outlined
-                      ></v-select>
-                    </v-container>
-                  </v-card-text>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary " text @click="close"> Cancel </v-btn>
-                    <v-btn color="primary " text @click="save"> Save </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-toolbar>
-            <v-expansion-panels
-              popout
-              focusable
-              class="mx-auto pa-6 my-2 ml-2"
-              elevation="2"
-            >
-              <draggable
-                group="issues"
-                :list="inprogress_issues"
                 shaped
-                class="row list-group-item"
+                class="col-12 list-group"
+                v-bind="dragOptions"
+                @change="onEnd"
                 @start="drag = true"
                 @end="drag = false"
-                @change="listChange"
+                tag="ul"
               >
-                <v-expansion-panel
-                  v-for="issue in inprogress_issues"
-                  :key="issue.id"
+                <transition-group
+                  type="transition"
+                  :name="!drag ? 'flip-list' : null"
                 >
-                  <v-expansion-panel-header>
-                    {{ issue.title }}
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <div class="py-4">{{ issue.details }}</div>
+                  <div v-for="issue in open_issues" :key="issue.id">
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>
+                        {{ issue.title }}
+                      </v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <div
+                          :class="
+                            issue.fixed
+                              ? 'fa fa-anchor'
+                              : 'glyphicon glyphicon-pushpin'
+                          "
+                          @click="issue.fixed = !issue.fixed"
+                          aria-hidden="true"
+                        >
+                          <p class="my-4">
+                            {{ issue.details }}
+                          </p>
+                        </div>
 
-                    <v-btn
-                      icon
-                      class="my-2 mx-2 float-right"
-                      @click="deleteItem(issue)"
-                      ><v-icon> mdi-delete </v-icon></v-btn
-                    >
-                    <v-btn
-                      icon
-                      class="my-2 mx-2 float-right"
-                      @click="editIssue(issue)"
-                      ><v-icon> mdi-pencil </v-icon></v-btn
-                    >
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
+                        <v-btn
+                          icon
+                          class="my-2 mx-2 float-right"
+                          @click="deleteItem(issue)"
+                          ><v-icon> mdi-delete </v-icon></v-btn
+                        >
+                        <v-btn
+                          icon
+                          class="my-2 mx-2 float-right"
+                          @click="editIssue(issue)"
+                          ><v-icon> mdi-pencil </v-icon></v-btn
+                        >
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </div>
+                </transition-group>
               </draggable>
             </v-expansion-panels>
           </v-card>
+
           <v-card>
             <v-toolbar flat>
               <v-toolbar-title>
-                <v-icon color="green">mdi-check</v-icon>
-                Resolved
+                <v-icon class="mr-3" color="green">mdi-check</v-icon>
+                Done
               </v-toolbar-title>
 
               <v-btn class="mx-2" color="green" small fab text>
                 {{ this.resolved_issues.length }}</v-btn
               >
             </v-toolbar>
-            <v-expansion-panels
-              popout
-              focusable
-              class="mx-auto pa-6 my-2 ml-2"
-              elevation="2"
-            >
+            <v-expansion-panels popout focusable class="my-2" elevation="2">
               <draggable
+                :empty-insert-threshold="200"
                 group="issues"
                 :list="resolved_issues"
-                shaped
-                class="row"
-                @change="log"
-              >
-                <v-expansion-panel
-                  v-for="issue in resolved_issues"
-                  :key="issue.id"
+                class="col-12 my-2 list-group"
+                v-bind="dragOptions"
+                @change="onEnd"
+                @start="drag = true"
+                @end="drag = false"
+                tag="ul"
+                ><transition-group
+                  type="transition"
+                  :name="!drag ? 'flip-list' : null"
                 >
-                  <v-expansion-panel-header>
-                    {{ issue.title }}
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <div class="py-4">{{ issue.details }}</div>
+                  <div v-for="issue in resolved_issues" :key="issue.id">
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>
+                        {{ issue.title }}
+                      </v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <div
+                          :class="
+                            issue.fixed
+                              ? 'fa fa-anchor'
+                              : 'glyphicon glyphicon-pushpin'
+                          "
+                          @click="issue.fixed = !issue.fixed"
+                          aria-hidden="true"
+                        >
+                          <p class="my-4">
+                            {{ issue.details }}
+                          </p>
+                        </div>
 
-                    <v-btn
-                      icon
-                      class="my-2 mx-2 float-right"
-                      @click="deleteItem(issue)"
-                      ><v-icon> mdi-delete </v-icon></v-btn
-                    >
-                    <v-btn
-                      icon
-                      class="my-2 mx-2 float-right"
-                      @click="editIssue(issue)"
-                      ><v-icon> mdi-pencil </v-icon></v-btn
-                    >
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
+                        <v-btn
+                          icon
+                          class="my-2 mx-2 float-right"
+                          @click="deleteItem(issue)"
+                          ><v-icon> mdi-delete </v-icon></v-btn
+                        >
+                        <v-btn
+                          icon
+                          class="my-2 mx-2 float-right"
+                          @click="editIssue(issue)"
+                          ><v-icon> mdi-pencil </v-icon></v-btn
+                        >
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </div>
+                </transition-group>
               </draggable>
             </v-expansion-panels>
           </v-card>
@@ -450,12 +390,25 @@
 <script>
 import axios from "axios";
 import draggable from "vuedraggable";
-
+const message = [
+  "vue.draggable",
+  "draggable",
+  "component",
+  "for",
+  "vue.js 2.0",
+  "based",
+  "on",
+  "Sortablejs",
+];
 export default {
   components: {
     draggable,
   },
   data: () => ({
+    drag: false,
+    list: message.map((name, index) => {
+      return { name, id: index + 1 };
+    }),
     hover: false,
     search: "",
     issuesLoading: false,
@@ -557,7 +510,7 @@ export default {
         .then(
           (response) => {
             console.log(response);
-            this.getIssues();
+            //this.getIssues();
           },
           (error) => {
             console.log(error);
@@ -648,6 +601,49 @@ export default {
     log: function () {
       window.console.log("lol");
     },
+    onEnd(evt) {
+      if (evt.added) {
+        this.editedItem.title = evt.added.element.title;
+        this.editedItem.details = evt.added.element.details;
+        this.editedItem.priority = evt.added.element.priority;
+        this.editedItem.id = evt.added.element.id;
+        if (evt.added.element.status === "Open") {
+          this.editedItem.status = "Resolved";
+        } else {
+          this.editedItem.status = "Open";
+        }
+
+        this.putIssue();
+        this.editedItem.title = "";
+        this.editedItem.details = "";
+        this.editedItem.priority = "";
+        this.editedItem.id = "";
+      }
+    },
   },
 };
 </script>
+<style>
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+.list-group {
+  min-height: 50px;
+}
+.list-group-item {
+  cursor: move;
+}
+.list-group-item i {
+  cursor: pointer;
+}
+.v-expansion-panel::before {
+  box-shadow: 1px;
+}
+</style>

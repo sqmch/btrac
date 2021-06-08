@@ -105,8 +105,8 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              Add Project
+            <v-btn large color="primary" dark class="" v-bind="attrs" v-on="on">
+              <v-icon class="mr-2">mdi-plus</v-icon>Add Project
             </v-btn>
           </template>
           <v-card class="pa-4">

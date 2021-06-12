@@ -155,7 +155,7 @@
         </v-dialog>
       </v-toolbar>
     </v-card>
-    <v-card class="mx-4 my-4">
+    <v-card class="mx-2 my-2">
       <v-toolbar flat>
         <v-toolbar-title>Recent</v-toolbar-title>
       </v-toolbar>

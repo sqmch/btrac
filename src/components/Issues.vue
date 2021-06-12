@@ -201,22 +201,28 @@
       <v-col class="pa-2 col-12">
         <v-container flat>
           <v-card flat class="">
-            <v-toolbar class="" flat
-              ><container width="300">
-                <v-toolbar-title>
-                  <v-icon class="mr-3">mdi-format-list-checks</v-icon> Task
-                </v-toolbar-title></container
-              >
+            <v-toolbar class="" flat>
+              <v-toolbar-title>
+                <v-icon class="mr-3">mdi-format-list-checks</v-icon> Task
+              </v-toolbar-title>
 
-              <v-btn class="mx-2" color="secondary" small fab text>
+              <v-btn class="ml-2" color="secondary" small fab text>
                 {{ this.open_issues.length }}</v-btn
               >
 
-              <v-divider class="mx-2" inset vertical></v-divider>
+              <v-divider class="ml-3" inset vertical></v-divider>
 
               <v-dialog v-model="dialog" max-width="500px">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="secondary" text fab v-bind="attrs" v-on="on">
+                  <v-btn
+                    color="secondary"
+                    class="ml-4"
+                    small
+                    text
+                    fab
+                    v-bind="attrs"
+                    v-on="on"
+                  >
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
                 </template>
@@ -268,10 +274,9 @@
                 shaped
                 class="col-12 list-group"
                 v-bind="dragOptions"
-                @change="onEnd"
+                @change="onEnd;"
                 @start="drag = true"
                 @end="drag = false"
-                tag="ul"
               >
                 <transition-group
                   type="transition"
@@ -280,7 +285,7 @@
                   <div v-for="issue in open_issues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
-                        {{ issue.title }}
+                        - {{ issue.id }} {{ issue.title }}
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <div
@@ -308,7 +313,13 @@
                           class="my-2 mx-2 float-right"
                           @click="editIssue(issue)"
                           ><v-icon> mdi-pencil </v-icon></v-btn
-                        >
+                        ><!--
+                        <v-btn
+                          icon
+                          class="my-2 mx-2 float-right"
+                          @click="finishIssue(issue)"
+                          ><v-icon> mdi-check </v-icon></v-btn
+                        >-->
                       </v-expansion-panel-content>
                     </v-expansion-panel>
                   </div>
@@ -338,7 +349,6 @@
                 @change="onEnd"
                 @start="drag = true"
                 @end="drag = false"
-                tag="ul"
                 ><transition-group
                   type="transition"
                   :name="!drag ? 'flip-list' : null"
@@ -582,25 +592,6 @@ export default {
       }
       this.close();
     },
-    listChange() {
-      //this.hover = true;
-      console.log("lol");
-      //console.log(this.hover);
-    },
-    add: function () {
-      this.list.push({ name: "Juan" });
-    },
-    replace: function () {
-      this.list = [{ name: "Edgard" }];
-    },
-    clone: function (el) {
-      return {
-        name: el.name + " cloned",
-      };
-    },
-    log: function () {
-      window.console.log("lol");
-    },
     onEnd(evt) {
       if (evt.added) {
         this.editedItem.title = evt.added.element.title;
@@ -618,7 +609,21 @@ export default {
         this.editedItem.details = "";
         this.editedItem.priority = "";
         this.editedItem.id = "";
+        this.sort();
       }
+    },
+    finishIssue(issue) {
+      this.editedItem.title = issue.title;
+      this.editedItem.details = issue.details;
+      this.editedItem.priority = issue.priority;
+      this.editedItem.id = issue.id;
+      this.editedItem.status = "Resolved";
+      this.putIssue();
+      this.editedItem.title = "";
+      this.editedItem.details = "";
+      this.editedItem.priority = "";
+      this.editedItem.id = "";
+      this.getIssues();
     },
   },
 };

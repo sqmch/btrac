@@ -274,7 +274,7 @@
                 shaped
                 class="col-12 list-group"
                 v-bind="dragOptions"
-                @change="onEnd;"
+                @change="onEnd"
                 @start="drag = true"
                 @end="drag = false"
               >
@@ -285,7 +285,7 @@
                   <div v-for="issue in open_issues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
-                        - {{ issue.id }} {{ issue.title }}
+                        {{ issue.title }}
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <div
@@ -344,6 +344,7 @@
                 :empty-insert-threshold="200"
                 group="issues"
                 :list="resolved_issues"
+                shaped
                 class="col-12 my-2 list-group"
                 v-bind="dragOptions"
                 @change="onEnd"
@@ -609,7 +610,7 @@ export default {
         this.editedItem.details = "";
         this.editedItem.priority = "";
         this.editedItem.id = "";
-        this.sort();
+        //this.sort();
       }
     },
     finishIssue(issue) {

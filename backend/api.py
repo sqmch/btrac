@@ -1,7 +1,7 @@
 from flask.globals import current_app
-from settings import *
+from settings import app
 from models import db, Issue, User, Project
-from flask import request, redirect
+from flask import request, redirect, Response, jsonify
 from datetime import datetime, timedelta
 from functools import wraps
 import jwt
@@ -117,7 +117,35 @@ def remove_project(current_user, id):
     return response
 
 
-# route to display issue table of specified project
+#######
+
+# route to update project issue order
+@app.route("/projects/<int:id>", methods=["PUT"])
+@token_required
+def update_order(current_user, id):
+    """Edits project issue order"""
+    request_data = request.get_json(force=True)
+    Project.update_order(
+        id,
+        request_data["order"],
+    )
+    response = Response(
+        "Project order updated", status=200, mimetype="application/json"
+    )
+    return response
+
+
+# route to get project issue order
+@app.route("/projects/<int:id>", methods=["GET"])
+@token_required
+def get_project_issue_order(current_user, id):
+    """Returns project issue order"""
+    return jsonify({"order": Project.get_project_issue_order(id)})
+
+
+#######
+
+# route to return issue table of specified project
 @app.route("/projects/<int:id>/issues", methods=["GET"])
 @token_required
 def get_issues_of_project(current_user, id):

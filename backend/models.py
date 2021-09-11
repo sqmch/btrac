@@ -45,12 +45,14 @@ class Project(db.Model):
     title = db.Column(db.String(50), unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     issues = db.relationship("Issue", backref="project")
+    order = db.Column(db.String())
 
     def json(self):
         return {
             "id": self.id,
             "title": self.title,
             "user_id": self.user_id,
+            "order": self.order,
         }
 
     def add_project(_title: str, _user):
@@ -71,6 +73,18 @@ class Project(db.Model):
         project = Project.query.filter_by(id=_id).first()
         project.title = _title
         db.session.commit()
+
+    def update_order(_id: int, _order: str):
+        """Update project issue order"""
+        project = Project.query.filter_by(id=_id).first()
+        project.order = str(_order)
+        db.session.commit()
+
+    def get_project_issue_order(_id: int):
+        """Returns project issue order"""
+        project = Project.query.filter_by(id=_id).first()
+        print(project.order)
+        return project.order
 
     def delete_project(_id: int):
         """Delete a project from the database"""

@@ -98,7 +98,7 @@
               </v-toolbar-title>
 
               <v-btn class="ml-2" color="secondary" small fab text>
-                {{ this.open_issues.length }}</v-btn
+                {{ this.openIssues.length }}</v-btn
               >
 
               <v-divider class="ml-3" inset vertical></v-divider>
@@ -163,7 +163,7 @@
               <draggable
                 :empty-insert-threshold="200"
                 group="issues"
-                :list="open_issues"
+                :list="openIssues"
                 shaped
                 class="col-12 list-group"
                 v-bind="dragOptions"
@@ -175,7 +175,7 @@
                   type="transition"
                   :name="!drag ? 'flip-list' : null"
                 >
-                  <div v-for="issue in open_issues" :key="issue.id">
+                  <div v-for="issue in openIssues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
                         {{ issue.title }}
@@ -229,14 +229,14 @@
               </v-toolbar-title>
 
               <v-btn class="mx-2" color="green" small fab text>
-                {{ this.resolved_issues.length }}</v-btn
+                {{ this.resolvedIssues.length }}</v-btn
               >
             </v-toolbar>
             <v-expansion-panels popout focusable class="my-2" elevation="2">
               <draggable
                 :empty-insert-threshold="200"
                 group="issues"
-                :list="resolved_issues"
+                :list="resolvedIssues"
                 shaped
                 class="col-12 my-2 list-group"
                 v-bind="dragOptions"
@@ -247,7 +247,7 @@
                   type="transition"
                   :name="!drag ? 'flip-list' : null"
                 >
-                  <div v-for="issue in resolved_issues" :key="issue.id">
+                  <div v-for="issue in resolvedIssues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
                         {{ issue.title }}
@@ -332,9 +332,8 @@ export default {
     statuses: ["Open", "Resolved"],
     priorities: ["Low", "Medium", "High"],
     issues: [],
-    open_issues: [],
-    inprogress_issues: [],
-    resolved_issues: [],
+    openIssues: [],
+    resolvedIssues: [],
     editedIndex: -1,
     editedItem: {
       title: "",
@@ -349,6 +348,13 @@ export default {
       priority: "",
     },
     selectedProjectId: 1,
+    issueOrder: [],
+    rawIssueOrder: [],
+    openIssueOrderStr: "",
+    openIssueOrderArr: [],
+
+    resolvedIssueOrderStr: "",
+    resolvedIssueOrderArr: [],
   }),
 
   computed: {
@@ -388,10 +394,10 @@ export default {
           })
           .then((response) => {
             this.issues = response.data.Issues;
-            this.open_issues = this.issues.filter((issue) =>
+            this.openIssues = this.issues.filter((issue) =>
               issue.status.includes("Open")
             );
-            this.resolved_issues = this.issues.filter((issue) =>
+            this.resolvedIssues = this.issues.filter((issue) =>
               issue.status.includes("Resolved")
             );
             this.issuesLoading = false;
@@ -489,7 +495,25 @@ export default {
       }
       this.close();
     },
+
+    finishIssue(issue) {
+      this.editedItem.title = issue.title;
+      this.editedItem.details = issue.details;
+      this.editedItem.priority = issue.priority;
+      this.editedItem.id = issue.id;
+      this.editedItem.status = "Resolved";
+      this.putIssue();
+      this.editedItem.title = "";
+      this.editedItem.details = "";
+      this.editedItem.priority = "";
+      this.editedItem.id = "";
+      this.getIssues();
+    },
     onEnd(evt) {
+      if (evt.moved) {
+        this.updateProjectIssueOrder;
+        this.getProjectIssueOrder();
+      }
       if (evt.added) {
         this.editedItem.title = evt.added.element.title;
         this.editedItem.details = evt.added.element.details;
@@ -509,18 +533,31 @@ export default {
         //this.sort();
       }
     },
-    finishIssue(issue) {
-      this.editedItem.title = issue.title;
-      this.editedItem.details = issue.details;
-      this.editedItem.priority = issue.priority;
-      this.editedItem.id = issue.id;
-      this.editedItem.status = "Resolved";
-      this.putIssue();
-      this.editedItem.title = "";
-      this.editedItem.details = "";
-      this.editedItem.priority = "";
-      this.editedItem.id = "";
-      this.getIssues();
+    setIssueOrder() {},
+    updateProjectIssueOrder() {
+      axios({
+        method: "put",
+        url: `/projects/${this.$store.state.project_id}`,
+        headers: { Authorization: "Bearer " + this.$store.state.token },
+        data: this.issueOrder,
+      }).catch((e) => {
+        console.log(e);
+        this.getIssues();
+      });
+    },
+    getProjectIssueOrder() {
+      axios({
+        method: "get",
+        url: `/projects/${this.$store.state.project_id}`,
+        headers: { Authorization: "Bearer " + this.$store.state.token },
+      })
+        .then((response) => {
+          this.rawIssueOrder = response.data;
+          console.log("rawIssueOrder - ", this.rawIssueorder);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
   },
 };

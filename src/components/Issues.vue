@@ -539,21 +539,24 @@ export default {
       for (let index = 0; index < this.resolvedIssues.length; index++) {
         try {
           this.resolvedIssueOrderArr.push(this.resolvedIssues[index].id);
-        } catch (error) {
-          console.log("Yoo ", error);
+        } catch (e) {
+          console.log(e);
         }
       }
       this.openIssueOrderArr = [];
       for (let index = 0; index < this.openIssues.length; index++) {
         try {
           this.openIssueOrderArr.push(this.openIssues[index].id);
-        } catch (error) {
-          console.log(error);
+        } catch (e) {
+          console.log(e);
         }
       }
 
-      console.log("openIssueOrderArr - ", this.openIssueOrderArr);
-      console.log("resolvedIssueOrderArr - ", this.resolvedIssueOrderArr);
+      console.log("[FRONT] openIssueOrderArr - ", this.openIssueOrderArr);
+      console.log(
+        "[FRONT] resolvedIssueOrderArr - ",
+        this.resolvedIssueOrderArr
+      );
     },
     currentIssueOrder() {
       this.createIssueOrderArrays();
@@ -564,7 +567,6 @@ export default {
     },
     updateProjectIssueOrder() {
       let current_order = this.currentIssueOrder();
-      console.log(current_order);
       axios({
         method: "put",
         url: `/projects/${this.$store.state.project_id}/order`,
@@ -587,7 +589,8 @@ export default {
             response.data["order"].replaceAll("'", '"')
           )["order"];
           this.issueOrder = clean_response;
-          this.createIssueOrderArrays();
+          console.log("[SERVER] issueOrder - ", this.issueOrder);
+          //this.createIssueOrderArrays();
         })
         .catch((e) => {
           console.log(e);

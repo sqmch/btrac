@@ -513,7 +513,7 @@ export default {
       if (evt.moved) {
         this.issueOrder;
         //this.createIssueOrderArrays();
-        this.updateProjectIssueOrder;
+        this.updateProjectIssueOrder();
         this.getProjectIssueOrder();
       }
       if (evt.added) {
@@ -528,7 +528,7 @@ export default {
         }
 
         this.putIssue();
-        this.updateProjectIssueOrder;
+        this.updateProjectIssueOrder();
         this.getProjectIssueOrder();
         this.editedItem.title = "";
         this.editedItem.details = "";
@@ -554,16 +554,25 @@ export default {
           console.log(error);
         }
       }
+
       console.log("openIssueOrderArr - ", this.openIssueOrderArr);
       console.log("resolvedIssueOrderArr - ", this.resolvedIssueOrderArr);
     },
-    setIssueOrder() {},
+    currentIssueOrder() {
+      this.createIssueOrderArrays();
+      return {
+        open_issues: this.openIssueOrderArr,
+        resolved_issues: this.resolvedIssueOrderArr,
+      };
+    },
     updateProjectIssueOrder() {
+      let current_order = this.currentIssueOrder().toString();
+      console.log(current_order);
       axios({
         method: "put",
-        url: `/projects/${this.$store.state.project_id}`,
+        url: `/projects/${this.$store.state.project_id}/order`,
         headers: { Authorization: "Bearer " + this.$store.state.token },
-        data: this.issueOrder,
+        data: { order: current_order },
       }).catch((e) => {
         console.log(e);
 
@@ -573,7 +582,7 @@ export default {
     getProjectIssueOrder() {
       axios({
         method: "get",
-        url: `/projects/${this.$store.state.project_id}`,
+        url: `/projects/${this.$store.state.project_id}/getorder`,
         headers: { Authorization: "Bearer " + this.$store.state.token },
       })
         .then((response) => {

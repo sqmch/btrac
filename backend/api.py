@@ -120,11 +120,12 @@ def remove_project(current_user, id):
 #######
 
 # route to update project issue order
-@app.route("/projects/<int:id>", methods=["PUT"])
+@app.route("/projects/<int:id>/order", methods=["PUT"])
 @token_required
 def update_order(current_user, id):
     """Edits project issue order"""
     request_data = request.get_json(force=True)
+    print(f"request_data (update_order()) - {request_data}")
     Project.update_order(
         id,
         request_data["order"],
@@ -136,7 +137,7 @@ def update_order(current_user, id):
 
 
 # route to get project issue order
-@app.route("/projects/<int:id>", methods=["GET"])
+@app.route("/projects/<int:id>/getorder", methods=["GET"])
 @token_required
 def get_project_issue_order(current_user, id):
     """Returns project issue order"""

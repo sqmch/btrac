@@ -178,7 +178,7 @@
                   <div v-for="issue in openIssues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
-                        {{ issue.title }}
+                        {{ issue.id }} {{ issue.title }}
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <div
@@ -250,7 +250,7 @@
                   <div v-for="issue in resolvedIssues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
-                        {{ issue.title }}
+                        {{ issue.id }} {{ issue.title }}
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <div
@@ -511,6 +511,8 @@ export default {
     },
     onEnd(evt) {
       if (evt.moved) {
+        this.issueOrder;
+        //this.createIssueOrderArrays();
         this.updateProjectIssueOrder;
         this.getProjectIssueOrder();
       }
@@ -526,12 +528,34 @@ export default {
         }
 
         this.putIssue();
+        this.updateProjectIssueOrder;
+        this.getProjectIssueOrder();
         this.editedItem.title = "";
         this.editedItem.details = "";
         this.editedItem.priority = "";
         this.editedItem.id = "";
         //this.sort();
       }
+    },
+    createIssueOrderArrays() {
+      this.resolvedIssueOrderArr = [];
+      for (let index = 0; index < this.resolvedIssues.length; index++) {
+        try {
+          this.resolvedIssueOrderArr.push(this.resolvedIssues[index].id);
+        } catch (error) {
+          console.log("Yoo ", error);
+        }
+      }
+      this.openIssueOrderArr = [];
+      for (let index = 0; index < this.openIssues.length; index++) {
+        try {
+          this.openIssueOrderArr.push(this.openIssues[index].id);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      console.log("openIssueOrderArr - ", this.openIssueOrderArr);
+      console.log("resolvedIssueOrderArr - ", this.resolvedIssueOrderArr);
     },
     setIssueOrder() {},
     updateProjectIssueOrder() {
@@ -542,6 +566,7 @@ export default {
         data: this.issueOrder,
       }).catch((e) => {
         console.log(e);
+
         this.getIssues();
       });
     },
@@ -554,6 +579,7 @@ export default {
         .then((response) => {
           this.rawIssueOrder = response.data;
           console.log("rawIssueOrder - ", this.rawIssueorder);
+          this.createIssueOrderArrays();
         })
         .catch((e) => {
           console.log(e);

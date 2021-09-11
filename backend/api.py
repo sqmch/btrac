@@ -140,7 +140,7 @@ def update_order(current_user, id):
 @token_required
 def get_project_issue_order(current_user, id):
     """Returns project issue order"""
-    return jsonify({"order": Project.get_project_issue_order(id)})
+    return jsonify({"order": str(Project.get_project_issue_order(current_user, id))})
 
 
 #######

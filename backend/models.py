@@ -3,7 +3,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
-# Initializing our database
+# Initializing database
 db = SQLAlchemy(app)
 
 
@@ -54,26 +54,26 @@ class Project(db.Model):
         }
 
     def add_project(_title: str, _user):
-        """add new project to database"""
+        """Add new project to database"""
         new_project = Project(title=_title, user=_user)
         db.session.add(new_project)
         db.session.commit()
 
     def get_all_projects(_user):
-        """get all projects in our database"""
+        """Get all projects from database"""
         return [
             Project.json(project)
             for project in Project.query.filter_by(user=_user).all()
         ]
 
     def update_project(_id: int, _title: str):
-        """updates a project"""
+        """Update a project"""
         project = Project.query.filter_by(id=_id).first()
         project.title = _title
         db.session.commit()
 
     def delete_project(_id: int):
-        """delete a project from the database"""
+        """Delete a project from the database"""
         Project.query.filter_by(id=_id).delete()
         db.session.commit()
 
@@ -84,8 +84,8 @@ class Issue(db.Model):
     # date = db.Column(db.String(20), nullable=False, default=datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
     title = db.Column(db.String(80), nullable=False)
     details = db.Column(db.String(1000), nullable=False)
-    status = db.Column(db.String(20), default="Open")  # Open, In Progress, Resolved
-    priority = db.Column(db.String(20), default="Low")  # Low, Medium, High
+    status = db.Column(db.String(20), default="Open")
+    priority = db.Column(db.String(20), default="Low")
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
 
     def json(self):
@@ -98,7 +98,7 @@ class Issue(db.Model):
         }
 
     def add_issue(_title: str, _details: str, _status: str, _priority: str, _project):
-        """add new issue to database"""
+        """Add new issue to database"""
         # creating an instance of our Issue constructor
         new_issue = Issue(
             title=_title,
@@ -111,20 +111,20 @@ class Issue(db.Model):
         db.session.commit()  # commit changes to session
 
     def get_all_issues(_project_id):
-        """get all issues in our database"""
+        """Get all issues in database"""
         return [
             Issue.json(issue)
             for issue in Issue.query.filter_by(project_id=_project_id).all()
         ]
 
     def get_issue(_id):
-        """get issue using the id as parameter"""
+        """Get issue using the id"""
         return [Issue.json(Issue.query.filter_by(id=_id).first())]
 
     def update_issue(
         _id: int, _title: str, _details: str, _status: str, _priority: str
     ):
-        """update an issue"""
+        """Update an issue"""
         issue = Issue.query.filter_by(id=_id).first()
         # issue.date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         issue.title = _title
@@ -134,7 +134,7 @@ class Issue(db.Model):
         db.session.commit()
 
     def delete_issue(_id: int):
-        """delete an issue from our database"""
+        """Delete an issue from database"""
         Issue.query.filter_by(id=_id).delete()
         # filter issue by id and delete
         db.session.commit()

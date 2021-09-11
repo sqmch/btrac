@@ -348,8 +348,8 @@ export default {
       priority: "",
     },
     selectedProjectId: 1,
-    issueOrder: [],
-    rawIssueOrder: [],
+    issueOrder: {},
+    rawIssueOrder: null,
     openIssueOrderStr: "",
     openIssueOrderArr: [],
 
@@ -511,8 +511,6 @@ export default {
     },
     onEnd(evt) {
       if (evt.moved) {
-        this.issueOrder;
-        //this.createIssueOrderArrays();
         this.updateProjectIssueOrder();
         this.getProjectIssueOrder();
       }
@@ -534,7 +532,6 @@ export default {
         this.editedItem.details = "";
         this.editedItem.priority = "";
         this.editedItem.id = "";
-        //this.sort();
       }
     },
     createIssueOrderArrays() {
@@ -566,7 +563,7 @@ export default {
       };
     },
     updateProjectIssueOrder() {
-      let current_order = this.currentIssueOrder().toString();
+      let current_order = this.currentIssueOrder();
       console.log(current_order);
       axios({
         method: "put",
@@ -586,8 +583,10 @@ export default {
         headers: { Authorization: "Bearer " + this.$store.state.token },
       })
         .then((response) => {
-          this.rawIssueOrder = response.data;
-          console.log("rawIssueOrder - ", this.rawIssueorder);
+          let clean_response = JSON.parse(
+            response.data["order"].replaceAll("'", '"')
+          )["order"];
+          this.issueOrder = clean_response;
           this.createIssueOrderArrays();
         })
         .catch((e) => {

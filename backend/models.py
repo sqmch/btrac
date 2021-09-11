@@ -78,13 +78,16 @@ class Project(db.Model):
         """Update project issue order"""
         project = Project.query.filter_by(id=_id).first()
         project.order = str(_order)
+        print(f"project.order {project.order}")
         db.session.commit()
 
     def get_project_issue_order(_user: User, _id: int):
         """Returns project issue order"""
-        return [
-            Project.json(Project.query.filter_by(user=_user, id=_id).first())["order"]
+        issue_order = Project.json(Project.query.filter_by(user=_user, id=_id).first())[
+            "order"
         ]
+        print(f"issue_order - {issue_order}")
+        return issue_order
 
     def delete_project(_id: int):
         """Delete a project from the database"""

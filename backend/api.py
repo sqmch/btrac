@@ -125,10 +125,10 @@ def remove_project(current_user, id):
 def update_order(current_user, id):
     """Edits project issue order"""
     request_data = request.get_json(force=True)
-    print(f"request_data (update_order()) - {request_data}")
+    print(f"request_data (update_order()) - {str(request_data)}")
     Project.update_order(
         id,
-        request_data["order"],
+        request_data,
     )
     response = Response(
         "Project order updated", status=200, mimetype="application/json"
@@ -141,7 +141,9 @@ def update_order(current_user, id):
 @token_required
 def get_project_issue_order(current_user, id):
     """Returns project issue order"""
-    return jsonify({"order": str(Project.get_project_issue_order(current_user, id))})
+    order = Project.get_project_issue_order(current_user, id)
+    print(f"order - {order}")
+    return jsonify({"order": order})
 
 
 #######

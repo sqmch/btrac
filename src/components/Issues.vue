@@ -334,6 +334,8 @@ export default {
     issues: [],
     openIssues: [],
     resolvedIssues: [],
+    orderedOpenIssues: [],
+    orderedResolvedIssues: [],
     editedIndex: -1,
     editedItem: {
       title: "",
@@ -380,8 +382,9 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     this.getIssues();
+    this.getProjectIssueOrder();
   },
 
   methods: {
@@ -405,10 +408,9 @@ export default {
           .catch((e) => {
             console.log(e);
           });
-      } else {
-        console.log("aint no project_id in this bitch");
       }
     },
+    separateIssues() {},
     addIssue() {
       if (this.$store.state.project_id) {
         axios
@@ -511,8 +513,9 @@ export default {
     },
     onEnd(evt) {
       if (evt.moved) {
+        //this.getProjectIssueOrder();
         this.updateProjectIssueOrder();
-        this.getProjectIssueOrder();
+        //this.getIssues();
       }
       if (evt.added) {
         this.editedItem.title = evt.added.element.title;
@@ -521,13 +524,19 @@ export default {
         this.editedItem.id = evt.added.element.id;
         if (evt.added.element.status === "Open") {
           this.editedItem.status = "Resolved";
+          this.resolvedIssues.push(this.editedItem);
+          this.openIssues.splice(this.editedItem.id, 1);
         } else {
           this.editedItem.status = "Open";
+          this.openIssues.push(this.editedItem);
+          this.resolvedIssues.splice(this.editedItem.id, 1);
         }
 
-        this.putIssue();
         this.updateProjectIssueOrder();
         this.getProjectIssueOrder();
+        this.getIssues();
+
+        this.putIssue();
         this.editedItem.title = "";
         this.editedItem.details = "";
         this.editedItem.priority = "";
@@ -572,11 +581,13 @@ export default {
         url: `/projects/${this.$store.state.project_id}/order`,
         headers: { Authorization: "Bearer " + this.$store.state.token },
         data: { order: current_order },
-      }).catch((e) => {
-        console.log(e);
+      })
+        .then(this.getProjectIssueOrder())
+        .catch((e) => {
+          console.log(e);
 
-        this.getIssues();
-      });
+          this.getIssues();
+        });
     },
     getProjectIssueOrder() {
       axios({
@@ -590,7 +601,29 @@ export default {
           )["order"];
           this.issueOrder = clean_response;
           console.log("[SERVER] issueOrder - ", this.issueOrder);
-          //this.createIssueOrderArrays();
+
+          // final ordering
+          let orderedOpenIssues = [];
+          this.openIssues.forEach(function (a) {
+            orderedOpenIssues[clean_response.open_issues.indexOf(a.id)] = a;
+          });
+          console.log(
+            "orderedOpenIssues - ",
+            JSON.stringify(orderedOpenIssues)
+          );
+          this.openIssues = orderedOpenIssues;
+
+          let orderedResolvedIssues = [];
+          this.resolvedIssues.forEach(function (a) {
+            orderedResolvedIssues[
+              clean_response.resolved_issues.indexOf(a.id)
+            ] = a;
+          });
+          console.log("orderedResolvedIssues - ", orderedResolvedIssues);
+          this.resolvedIssues = orderedResolvedIssues;
+          // /final ordering
+
+          this.createIssueOrderArrays();
         })
         .catch((e) => {
           console.log(e);

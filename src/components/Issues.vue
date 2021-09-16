@@ -37,12 +37,6 @@
                   label="Details"
                 ></v-textarea>
                 <v-select
-                  v-model="editedItem.priority"
-                  label="Priority"
-                  :items="priorities"
-                  outlined
-                ></v-select>
-                <v-select
                   :items="statuses"
                   v-model="editedItem.status"
                   label="Status"
@@ -137,12 +131,6 @@
                         label="Details"
                       ></v-textarea>
                       <v-select
-                        v-model="editedItem.priority"
-                        label="Priority"
-                        :items="priorities"
-                        outlined
-                      ></v-select>
-                      <v-select
                         :items="statuses"
                         v-model="editedItem.status"
                         label="Status"
@@ -178,7 +166,7 @@
                   <div v-for="issue in openIssues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
-                        {{ issue.id }} {{ issue.title }}
+                        {{ issue.title }}
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <div
@@ -250,7 +238,7 @@
                   <div v-for="issue in resolvedIssues" :key="issue.id">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
-                        {{ issue.id }} {{ issue.title }}
+                        {{ issue.title }}
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <div
@@ -326,11 +314,9 @@ export default {
       },
       //{ text: "Details", value: "details" },
       { text: "Status", value: "status" },
-      { text: "Priority", value: "priority" },
       { text: "Edit / Delete", value: "actions", sortable: false },
     ],
     statuses: ["Open", "Resolved"],
-    priorities: ["Low", "Medium", "High"],
     issues: [],
     openIssues: [],
     resolvedIssues: [],
@@ -341,13 +327,11 @@ export default {
       title: "",
       details: "",
       status: "",
-      priority: "",
     },
     defaultItem: {
       title: "",
       details: "",
       status: "",
-      priority: "",
     },
     selectedProjectId: 1,
     issueOrder: {},
@@ -504,13 +488,11 @@ export default {
     finishIssue(issue) {
       this.editedItem.title = issue.title;
       this.editedItem.details = issue.details;
-      this.editedItem.priority = issue.priority;
       this.editedItem.id = issue.id;
       this.editedItem.status = "Resolved";
       this.putIssue();
       this.editedItem.title = "";
       this.editedItem.details = "";
-      this.editedItem.priority = "";
       this.editedItem.id = "";
       this.getIssues();
     },
@@ -518,31 +500,22 @@ export default {
       if (evt.moved) {
         this.updateProjectIssueOrder();
         this.getProjectIssueOrder();
-        //this.getIssues();
       }
       if (evt.added) {
         this.editedItem.title = evt.added.element.title;
         this.editedItem.details = evt.added.element.details;
-        this.editedItem.priority = evt.added.element.priority;
         this.editedItem.id = evt.added.element.id;
         if (evt.added.element.status === "Open") {
           this.editedItem.status = "Resolved";
-          //this.resolvedIssues.push(this.editedItem);
-          //this.openIssues.splice(this.editedItem.id, 1);
         } else {
           this.editedItem.status = "Open";
-          //this.openIssues.push(this.editedItem);
-          //this.resolvedIssues.splice(this.editedItem.id, 1);
         }
-
         this.updateProjectIssueOrder();
         this.getProjectIssueOrder();
-        //this.getIssues();
 
         this.putIssue();
         this.editedItem.title = "";
         this.editedItem.details = "";
-        this.editedItem.priority = "";
         this.editedItem.id = "";
       }
     },
@@ -550,7 +523,7 @@ export default {
       this.resolvedIssueOrderArr = [];
       for (let index = 0; index < this.resolvedIssues.length; index++) {
         try {
-          this.resolvedIssueOrderArr.push(this.resolvedIssues[index].id);
+          this.resolvedIssueOrderArr.push(this.resolvedIssues[index]);
         } catch (e) {
           console.log(e);
         }
@@ -558,19 +531,12 @@ export default {
       this.openIssueOrderArr = [];
       for (let index = 0; index < this.openIssues.length; index++) {
         try {
-          this.openIssueOrderArr.push(this.openIssues[index].id);
+          this.openIssueOrderArr.push(this.openIssues[index]);
         } catch (e) {
           console.log(e);
         }
       }
-
-      console.log("[FRONT] openIssueOrderArr - ", this.openIssueOrderArr);
-      console.log(
-        "[FRONT] resolvedIssueOrderArr - ",
-        this.resolvedIssueOrderArr
-      );
     },
-    // note to self: shit probably goes wrong here and the one below???
     currentIssueOrder() {
       this.createIssueOrderArrays();
       return {
@@ -586,13 +552,9 @@ export default {
         headers: { Authorization: "Bearer " + this.$store.state.token },
         data: { order: current_order },
       })
-        .then
-        //this.getProjectIssueOrder()
-        ()
+        .then()
         .catch((e) => {
           console.log(e);
-
-          //this.getIssues();
         });
     },
     getProjectIssueOrder() {
@@ -606,37 +568,8 @@ export default {
             response.data["order"].replaceAll("'", '"')
           )["order"];
           this.issueOrder = clean_response;
-          console.log(
-            "[SERVER] issueOrder - ",
-            JSON.stringify(this.issueOrder)
-          );
-
-          // final ordering
-          //let orderedOpenIssues = [];
-          this.openIssues.forEach(function (a) {
-            this.orderedOpenIssues[clean_response.open_issues.indexOf(a.id)] =
-              a;
-          });
-          console.log(
-            "[FRONT] orderedOpenIssues - ",
-            JSON.stringify(this.orderedOpenIssues)
-          );
-
-          this.openIssues = this.orderedOpenIssues;
-
-          //let orderedResolvedIssues = [];
-          this.resolvedIssues.forEach(function (a) {
-            this.orderedResolvedIssues[
-              clean_response.resolved_issues.indexOf(a.id)
-            ] = a;
-          });
-          console.log(
-            "[FRONT] orderedResolvedIssues - ",
-            JSON.stringify(this.orderedResolvedIssues)
-          );
-          this.resolvedIssues = this.orderedResolvedIssues;
-          // /final ordering
-
+          this.openIssues = this.issueOrder.open_issues;
+          this.resolvedIssues = this.issueOrder.resolved_issues;
           this.createIssueOrderArrays();
         })
         .catch((e) => {

@@ -102,7 +102,6 @@ class Issue(db.Model):
     title = db.Column(db.String(80), nullable=False)
     details = db.Column(db.String(1000), nullable=False)
     status = db.Column(db.String(20), default="Open")
-    priority = db.Column(db.String(20), default="Low")
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
 
     def json(self):
@@ -111,17 +110,15 @@ class Issue(db.Model):
             "title": self.title,
             "details": self.details,
             "status": self.status,
-            "priority": self.priority,
         }
 
-    def add_issue(_title: str, _details: str, _status: str, _priority: str, _project):
+    def add_issue(_title: str, _details: str, _status: str, _project):
         """Add new issue to database"""
         # creating an instance of our Issue constructor
         new_issue = Issue(
             title=_title,
             details=_details,
             status=_status,
-            priority=_priority,
             project=_project,
         )
         db.session.add(new_issue)  # add new Issue to database session
@@ -138,16 +135,13 @@ class Issue(db.Model):
         """Get issue using the id"""
         return [Issue.json(Issue.query.filter_by(id=_id).first())]
 
-    def update_issue(
-        _id: int, _title: str, _details: str, _status: str, _priority: str
-    ):
+    def update_issue(_id: int, _title: str, _details: str, _status: str):
         """Update an issue"""
         issue = Issue.query.filter_by(id=_id).first()
         # issue.date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         issue.title = _title
         issue.details = _details
         issue.status = _status
-        issue.priority = _priority
         db.session.commit()
 
     def delete_issue(_id: int):

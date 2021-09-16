@@ -45,7 +45,6 @@ def register():
     data = request.get_json()
     user = User(**data)
     try:
-
         db.session.add(user)
         db.session.commit()
     except Exception as e:
@@ -58,10 +57,8 @@ def register():
 def login():
     data = request.get_json()
     user = User.authenticate(**data)
-
     if not user:
         return jsonify({"message": "Invalid credentials", "authenticated": False}), 401
-
     token = jwt.encode(
         {
             "sub": user.email,
@@ -78,7 +75,6 @@ def login():
 @token_required
 def get_projects(current_user):
     """Returns all projects in the db"""
-
     return jsonify({"Projects": Project.get_all_projects(current_user)})
 
 
@@ -117,8 +113,6 @@ def remove_project(current_user, id):
     return response
 
 
-#######
-
 # route to update project issue order
 @app.route("/projects/<int:id>/order", methods=["PUT"])
 @token_required
@@ -144,8 +138,6 @@ def get_project_issue_order(current_user, id):
     return jsonify({"order": order})
 
 
-#######
-
 # route to return issue table of specified project
 @app.route("/projects/<int:id>/issues", methods=["GET"])
 @token_required
@@ -159,8 +151,7 @@ def get_issues_of_project(current_user, id):
 @token_required
 def add_issue(current_user, id):
     """Adds new issue to db"""
-    request_data = request.get_json(force=True)  # getting data from client
-    # project = current_user.projects.filter_by(id=id).first()
+    request_data = request.get_json(force=True)
     project = Project.query.get(id)
     Issue.add_issue(
         request_data["title"],

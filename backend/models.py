@@ -114,15 +114,14 @@ class Issue(db.Model):
 
     def add_issue(_title: str, _details: str, _status: str, _project):
         """Add new issue to database"""
-        # creating an instance of our Issue constructor
         new_issue = Issue(
             title=_title,
             details=_details,
             status=_status,
             project=_project,
         )
-        db.session.add(new_issue)  # add new Issue to database session
-        db.session.commit()  # commit changes to session
+        db.session.add(new_issue)
+        db.session.commit()
 
     def get_all_issues(_project_id):
         """Get all issues in database"""
@@ -147,5 +146,4 @@ class Issue(db.Model):
     def delete_issue(_id: int):
         """Delete an issue from database"""
         Issue.query.filter_by(id=_id).delete()
-        # filter issue by id and delete
         db.session.commit()

@@ -352,6 +352,7 @@ export default {
     selectedProjectId: 1,
     issueOrder: {},
     rawIssueOrder: null,
+
     openIssueOrderStr: "",
     openIssueOrderArr: [],
 
@@ -438,10 +439,12 @@ export default {
         url: `/issues/${this.editedItem.id}`,
         headers: { Authorization: "Bearer " + this.$store.state.token },
         data: this.editedItem,
-      }).catch((e) => {
-        console.log(e);
-        this.getIssues();
-      });
+      })
+        .then()
+        .catch((e) => {
+          console.log(e);
+          this.getIssues();
+        });
     },
 
     editIssue(item) {
@@ -513,8 +516,8 @@ export default {
     },
     onEnd(evt) {
       if (evt.moved) {
-        //this.getProjectIssueOrder();
         this.updateProjectIssueOrder();
+        this.getProjectIssueOrder();
         //this.getIssues();
       }
       if (evt.added) {
@@ -524,17 +527,17 @@ export default {
         this.editedItem.id = evt.added.element.id;
         if (evt.added.element.status === "Open") {
           this.editedItem.status = "Resolved";
-          this.resolvedIssues.push(this.editedItem);
-          this.openIssues.splice(this.editedItem.id, 1);
+          //this.resolvedIssues.push(this.editedItem);
+          //this.openIssues.splice(this.editedItem.id, 1);
         } else {
           this.editedItem.status = "Open";
-          this.openIssues.push(this.editedItem);
-          this.resolvedIssues.splice(this.editedItem.id, 1);
+          //this.openIssues.push(this.editedItem);
+          //this.resolvedIssues.splice(this.editedItem.id, 1);
         }
 
         this.updateProjectIssueOrder();
         this.getProjectIssueOrder();
-        this.getIssues();
+        //this.getIssues();
 
         this.putIssue();
         this.editedItem.title = "";
@@ -567,6 +570,7 @@ export default {
         this.resolvedIssueOrderArr
       );
     },
+    // note to self: shit probably goes wrong here and the one below???
     currentIssueOrder() {
       this.createIssueOrderArrays();
       return {
@@ -582,11 +586,13 @@ export default {
         headers: { Authorization: "Bearer " + this.$store.state.token },
         data: { order: current_order },
       })
-        .then(this.getProjectIssueOrder())
+        .then
+        //this.getProjectIssueOrder()
+        ()
         .catch((e) => {
           console.log(e);
 
-          this.getIssues();
+          //this.getIssues();
         });
     },
     getProjectIssueOrder() {
@@ -600,27 +606,35 @@ export default {
             response.data["order"].replaceAll("'", '"')
           )["order"];
           this.issueOrder = clean_response;
-          console.log("[SERVER] issueOrder - ", this.issueOrder);
+          console.log(
+            "[SERVER] issueOrder - ",
+            JSON.stringify(this.issueOrder)
+          );
 
           // final ordering
-          let orderedOpenIssues = [];
+          //let orderedOpenIssues = [];
           this.openIssues.forEach(function (a) {
-            orderedOpenIssues[clean_response.open_issues.indexOf(a.id)] = a;
+            this.orderedOpenIssues[clean_response.open_issues.indexOf(a.id)] =
+              a;
           });
           console.log(
-            "orderedOpenIssues - ",
-            JSON.stringify(orderedOpenIssues)
+            "[FRONT] orderedOpenIssues - ",
+            JSON.stringify(this.orderedOpenIssues)
           );
-          this.openIssues = orderedOpenIssues;
 
-          let orderedResolvedIssues = [];
+          this.openIssues = this.orderedOpenIssues;
+
+          //let orderedResolvedIssues = [];
           this.resolvedIssues.forEach(function (a) {
-            orderedResolvedIssues[
+            this.orderedResolvedIssues[
               clean_response.resolved_issues.indexOf(a.id)
             ] = a;
           });
-          console.log("orderedResolvedIssues - ", orderedResolvedIssues);
-          this.resolvedIssues = orderedResolvedIssues;
+          console.log(
+            "[FRONT] orderedResolvedIssues - ",
+            JSON.stringify(this.orderedResolvedIssues)
+          );
+          this.resolvedIssues = this.orderedResolvedIssues;
           // /final ordering
 
           this.createIssueOrderArrays();

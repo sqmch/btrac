@@ -461,7 +461,6 @@ export default {
         });
       this.closeDelete();
       this.getIssues();
-      this.getProjectIssueOrder();
     },
 
     close() {
@@ -484,18 +483,20 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.issues[this.editedIndex], this.editedItem);
         this.putIssue();
-        this.updateProjectIssueOrder();
+        this.editedIndex = -1;
       } else {
         this.issues.push(this.editedItem);
+        /*
         if (this.editedItem.status === "Open") {
           this.openIssues.push(this.editedItem);
         } else {
           this.resolvedIssues.push(this.editedItem);
-        }
+        }*/
         this.addIssue();
         this.getIssues();
         this.updateProjectIssueOrder();
       }
+      this.getIssues();
       this.close();
     },
 
@@ -508,6 +509,7 @@ export default {
       this.editedItem.title = "";
       this.editedItem.details = "";
       this.editedItem.id = "";
+      this.getIssues();
     },
     onEnd(evt) {
       if (evt.moved) {

@@ -23,7 +23,11 @@
         </v-list-item>
       </v-list>
       <template v-slot:append>
-        <div class="h3 mx-4">{{ $store.state.user }}</div>
+        <div class="text-center"></div>
+
+        <div class="h3 mx-4 text-center">
+          Logged in as {{ $store.state.user }}
+        </div>
         <div class="pa-2">
           <v-btn block @click="logout"> Logout </v-btn>
         </div>
@@ -35,6 +39,8 @@
     </v-main>
     <v-footer padless>
       <v-col class="text-center" cols="12">
+        <v-icon size="24px" @click="darkMode">mdi-lightbulb</v-icon>
+
         <v-icon size="24px" @click="ghub">mdi-github</v-icon>
 
         <!-- {{ new Date().getFullYear() }} — <strong>trackerofbugs</strong>-->
@@ -62,6 +68,9 @@ export default {
     },
     ghub() {
       window.open("https://github.com/sqmch/trvcker", "_blank");
+    },
+    darkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     },
   },
 };

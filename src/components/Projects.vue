@@ -62,42 +62,40 @@
         </v-dialog>
       </v-toolbar>
     </v-card>
-    <v-card class="mx-2 my-2">
-      <v-toolbar flat>
-        <v-toolbar-title>Recent</v-toolbar-title>
-      </v-toolbar>
-      <v-expansion-panels flat focusable class="pa-6 my-2 mx-2" elevation="0">
-        <draggable shaped v-model="projects" class="row">
-          <v-expansion-panel flat v-for="project in projects" :key="project.id">
-            <v-expansion-panel-header>
-              {{ project.title }}
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <div class="py-4">Some sort of a project description.</div>
-              <v-btn
-                large
-                color="primary"
-                class="my-2"
-                @click="openProject(project.id)"
-                ><v-icon left> mdi-format-list-checks </v-icon>Open</v-btn
-              >
-              <v-btn
-                icon
-                class="my-2 mx-2 float-right"
-                @click="deleteItem(project)"
-                ><v-icon> mdi-delete </v-icon></v-btn
-              >
-              <v-btn
-                icon
-                class="my-2 mx-2 float-right"
-                @click="editProject(project)"
-                ><v-icon> mdi-pencil </v-icon></v-btn
-              >
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </draggable>
-      </v-expansion-panels>
-    </v-card>
+    <v-toolbar flat>
+      <v-toolbar-title>Recent</v-toolbar-title>
+    </v-toolbar>
+    <v-expansion-panels flat focusable class="pa-6 my-2 mx-2" elevation="0">
+      <draggable shaped v-model="projects" class="row">
+        <v-expansion-panel flat v-for="project in projects" :key="project.id">
+          <v-expansion-panel-header>
+            {{ project.title }}
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <div class="py-4">Some sort of a project description.</div>
+            <v-btn
+              large
+              color="primary"
+              class="my-2"
+              @click="openProject(project.id)"
+              ><v-icon left> mdi-format-list-checks </v-icon>Open</v-btn
+            >
+            <v-btn
+              icon
+              class="my-2 mx-2 float-right"
+              @click="deleteItem(project)"
+              ><v-icon> mdi-delete </v-icon></v-btn
+            >
+            <v-btn
+              icon
+              class="my-2 mx-2 float-right"
+              @click="editProject(project)"
+              ><v-icon> mdi-pencil </v-icon></v-btn
+            >
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </draggable>
+    </v-expansion-panels>
   </div>
 </template>
 <script>

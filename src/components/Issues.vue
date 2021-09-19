@@ -42,6 +42,7 @@
                   v-model="editedItem.status"
                   label="Status"
                   outlined
+                  required
                 ></v-select>
               </v-container>
             </v-card-text>
@@ -131,6 +132,7 @@
                       v-model="editedItem.status"
                       label="Status"
                       outlined
+                      required
                     ></v-select>
                   </v-container>
                 </v-card-text>
@@ -459,6 +461,7 @@ export default {
         });
       this.closeDelete();
       this.getIssues();
+      this.getProjectIssueOrder();
     },
 
     close() {

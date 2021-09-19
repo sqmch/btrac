@@ -12,7 +12,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(50))
-    projects = db.relationship("Project", lazy="dynamic", backref="user")
+    projects = db.relationship(
+        "Project", lazy="dynamic", backref="user", cascade="all, delete, delete-orphan"
+    )
 
     def __init__(self, email, password):
         self.email = email
@@ -44,7 +46,9 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    issues = db.relationship("Issue", backref="project")
+    issues = db.relationship(
+        "Issue", backref="project", cascade="all, delete, delete-orphan"
+    )
     order = db.Column(db.String())
 
     def json(self):
@@ -89,7 +93,8 @@ class Project(db.Model):
 
     def delete_project(_id: int):
         """Delete a project from the database"""
-        Project.query.filter_by(id=_id).delete()
+        proj = Project.query.filter_by(id=_id).first()
+        db.session.delete(proj)
         db.session.commit()
 
 

@@ -2,11 +2,12 @@
   <div>
     <v-card flat>
       <v-toolbar flat>
-        <v-toolbar-title>Items</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
         <v-btn icon plain to="/projects">
           <v-icon>mdi-arrow-left</v-icon></v-btn
         >
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-toolbar-title>Items</v-toolbar-title>
+
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
@@ -85,195 +86,189 @@
     <v-row>
       <v-col class="pa-2 col-12">
         <v-container flat>
-          <v-card flat class="">
-            <v-toolbar class="" flat>
-              <v-toolbar-title>
-                <v-icon class="mr-3">mdi-format-list-checks</v-icon> Task
-              </v-toolbar-title>
+          <v-toolbar class="" flat>
+            <v-toolbar-title>
+              <v-icon class="mr-3">mdi-format-list-checks</v-icon> Task
+            </v-toolbar-title>
 
-              <v-btn class="ml-2" color="secondary" small fab text>
-                {{ this.openIssues.length }}</v-btn
-              >
+            <v-btn class="ml-2" color="secondary" small fab text>
+              {{ this.openIssues.length }}</v-btn
+            >
 
-              <v-divider class="ml-3" inset vertical></v-divider>
+            <v-divider class="ml-3" inset vertical></v-divider>
 
-              <v-dialog
-                :retain-focus="false"
-                v-model="dialog"
-                max-width="500px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color="secondary"
-                    class="ml-4"
-                    small
-                    text
-                    fab
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
-                  </v-card-title>
-                  <v-card-text>
-                    <v-container>
-                      <v-text-field
-                        v-model="editedItem.title"
-                        label="Title"
-                      ></v-text-field>
-                      <v-textarea
-                        name="Details"
-                        v-model="editedItem.details"
-                        label="Details"
-                      ></v-textarea>
-                      <v-select
-                        :items="statuses"
-                        v-model="editedItem.status"
-                        label="Status"
-                        outlined
-                      ></v-select>
-                    </v-container>
-                  </v-card-text>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary " text @click="close"> Cancel </v-btn>
-                    <v-btn color="primary " text @click="save"> Save </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-toolbar>
-            <v-expansion-panels flat focusable class="my-2 pa-0">
-              <draggable
-                :empty-insert-threshold="200"
-                group="issues"
-                :list="openIssues"
-                shaped
-                class="col-12 list-group"
-                v-bind="dragOptions"
-                @change="onEnd"
-                @start="drag = true"
-                @end="drag = false"
-              >
-                <transition-group
-                  type="transition"
-                  :name="!drag ? 'flip-list' : null"
+            <v-dialog :retain-focus="false" v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="secondary"
+                  class="ml-4"
+                  small
+                  text
+                  fab
+                  v-bind="attrs"
+                  v-on="on"
                 >
-                  <div v-for="issue in openIssues" :key="issue.id">
-                    <v-expansion-panel>
-                      <v-expansion-panel-header>
-                        {{ issue.title }}
-                      </v-expansion-panel-header>
-                      <v-expansion-panel-content>
-                        <div
-                          :class="
-                            issue.fixed
-                              ? 'fa fa-anchor'
-                              : 'glyphicon glyphicon-pushpin'
-                          "
-                          @click="issue.fixed = !issue.fixed"
-                          aria-hidden="true"
-                        >
-                          <p class="my-4">
-                            {{ issue.details }}
-                          </p>
-                        </div>
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-text-field
+                      v-model="editedItem.title"
+                      label="Title"
+                    ></v-text-field>
+                    <v-textarea
+                      name="Details"
+                      v-model="editedItem.details"
+                      label="Details"
+                    ></v-textarea>
+                    <v-select
+                      :items="statuses"
+                      v-model="editedItem.status"
+                      label="Status"
+                      outlined
+                    ></v-select>
+                  </v-container>
+                </v-card-text>
 
-                        <v-btn
-                          icon
-                          class="my-2 mx-2 float-right"
-                          @click="deleteItem(issue)"
-                          ><v-icon> mdi-delete </v-icon></v-btn
-                        >
-                        <v-btn
-                          icon
-                          class="my-2 mx-2 float-right"
-                          @click="editIssue(issue)"
-                          ><v-icon> mdi-pencil </v-icon></v-btn
-                        >
-                        <v-btn
-                          icon
-                          class="my-2 mx-2 float-right"
-                          @click="finishIssue(issue)"
-                          ><v-icon> mdi-check </v-icon></v-btn
-                        >
-                      </v-expansion-panel-content>
-                    </v-expansion-panel>
-                  </div>
-                </transition-group>
-              </draggable>
-            </v-expansion-panels>
-          </v-card>
-
-          <v-card>
-            <v-toolbar flat>
-              <v-toolbar-title>
-                <v-icon class="mr-3" color="green">mdi-check</v-icon>
-                Done
-              </v-toolbar-title>
-
-              <v-btn class="mx-2" color="green" small fab text>
-                {{ this.resolvedIssues.length }}</v-btn
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary " text @click="close"> Cancel </v-btn>
+                  <v-btn color="primary " text @click="save"> Save </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+          <v-expansion-panels flat focusable class="my-2 pa-0">
+            <draggable
+              :empty-insert-threshold="200"
+              group="issues"
+              :list="openIssues"
+              shaped
+              class="col-12 list-group"
+              v-bind="dragOptions"
+              @change="onEnd"
+              @start="drag = true"
+              @end="drag = false"
+            >
+              <transition-group
+                type="transition"
+                :name="!drag ? 'flip-list' : null"
               >
-            </v-toolbar>
-            <v-expansion-panels popout focusable class="my-2" elevation="2">
-              <draggable
-                :empty-insert-threshold="200"
-                group="issues"
-                :list="resolvedIssues"
-                shaped
-                class="col-12 my-2 list-group"
-                v-bind="dragOptions"
-                @change="onEnd"
-                @start="drag = true"
-                @end="drag = false"
-                ><transition-group
-                  type="transition"
-                  :name="!drag ? 'flip-list' : null"
-                >
-                  <div v-for="issue in resolvedIssues" :key="issue.id">
-                    <v-expansion-panel>
-                      <v-expansion-panel-header>
-                        {{ issue.title }}
-                      </v-expansion-panel-header>
-                      <v-expansion-panel-content>
-                        <div
-                          :class="
-                            issue.fixed
-                              ? 'fa fa-anchor'
-                              : 'glyphicon glyphicon-pushpin'
-                          "
-                          @click="issue.fixed = !issue.fixed"
-                          aria-hidden="true"
-                        >
-                          <p class="my-4">
-                            {{ issue.details }}
-                          </p>
-                        </div>
+                <div v-for="issue in openIssues" :key="issue.id">
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>
+                      {{ issue.title }}
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <div
+                        :class="
+                          issue.fixed
+                            ? 'fa fa-anchor'
+                            : 'glyphicon glyphicon-pushpin'
+                        "
+                        @click="issue.fixed = !issue.fixed"
+                        aria-hidden="true"
+                      >
+                        <p class="my-4">
+                          {{ issue.details }}
+                        </p>
+                      </div>
 
-                        <v-btn
-                          icon
-                          class="my-2 mx-2 float-right"
-                          @click="deleteItem(issue)"
-                          ><v-icon> mdi-delete </v-icon></v-btn
-                        >
-                        <v-btn
-                          icon
-                          class="my-2 mx-2 float-right"
-                          @click="editIssue(issue)"
-                          ><v-icon> mdi-pencil </v-icon></v-btn
-                        >
-                      </v-expansion-panel-content>
-                    </v-expansion-panel>
-                  </div>
-                </transition-group>
-              </draggable>
-            </v-expansion-panels>
-          </v-card>
+                      <v-btn
+                        icon
+                        class="my-2 mx-2 float-right"
+                        @click="deleteItem(issue)"
+                        ><v-icon> mdi-delete </v-icon></v-btn
+                      >
+                      <v-btn
+                        icon
+                        class="my-2 mx-2 float-right"
+                        @click="editIssue(issue)"
+                        ><v-icon> mdi-pencil </v-icon></v-btn
+                      >
+                      <v-btn
+                        icon
+                        class="my-2 mx-2 float-right"
+                        @click="finishIssue(issue)"
+                        ><v-icon> mdi-check </v-icon></v-btn
+                      >
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </div>
+              </transition-group>
+            </draggable>
+          </v-expansion-panels>
+
+          <v-toolbar flat>
+            <v-toolbar-title>
+              <v-icon class="mr-3" color="green">mdi-check</v-icon>
+              Done
+            </v-toolbar-title>
+
+            <v-btn class="mx-2" color="green" small fab text>
+              {{ this.resolvedIssues.length }}</v-btn
+            >
+          </v-toolbar>
+          <v-expansion-panels popout focusable class="my-2" elevation="2">
+            <draggable
+              :empty-insert-threshold="200"
+              group="issues"
+              :list="resolvedIssues"
+              shaped
+              class="col-12 my-2 list-group"
+              v-bind="dragOptions"
+              @change="onEnd"
+              @start="drag = true"
+              @end="drag = false"
+              ><transition-group
+                type="transition"
+                :name="!drag ? 'flip-list' : null"
+              >
+                <div v-for="issue in resolvedIssues" :key="issue.id">
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>
+                      <p style="text-decoration: line-through">
+                        {{ issue.title }}
+                      </p>
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <div
+                        :class="
+                          issue.fixed
+                            ? 'fa fa-anchor'
+                            : 'glyphicon glyphicon-pushpin'
+                        "
+                        @click="issue.fixed = !issue.fixed"
+                        aria-hidden="true"
+                      >
+                        <p class="my-4">
+                          {{ issue.details }}
+                        </p>
+                      </div>
+
+                      <v-btn
+                        icon
+                        class="my-2 mx-2 float-right"
+                        @click="deleteItem(issue)"
+                        ><v-icon> mdi-delete </v-icon></v-btn
+                      >
+                      <v-btn
+                        icon
+                        class="my-2 mx-2 float-right"
+                        @click="editIssue(issue)"
+                        ><v-icon> mdi-pencil </v-icon></v-btn
+                      >
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </div>
+              </transition-group>
+            </draggable>
+          </v-expansion-panels>
         </v-container>
       </v-col>
     </v-row>
@@ -312,7 +307,7 @@ export default {
         align: "start",
         value: "title",
       },
-      //{ text: "Details", value: "details" },
+      { text: "Details", value: "details" },
       { text: "Status", value: "status" },
       { text: "Edit / Delete", value: "actions", sortable: false },
     ],
@@ -388,14 +383,22 @@ export default {
             this.resolvedIssues = this.issues.filter((issue) =>
               issue.status.includes("Resolved")
             );
+            console.log(
+              "getIssues openIssues.length - ",
+              this.openIssues.length
+            );
+            console.log(
+              "getIssues resolvedIssues.length - ",
+              this.resolvedIssues.length
+            );
+            this.updateProjectIssueOrder();
             this.issuesLoading = false;
           })
           .catch((e) => {
-            console.log(e);
+            console.log("getIssues error - ", e);
           });
       }
     },
-    separateIssues() {},
     addIssue() {
       if (this.$store.state.project_id) {
         axios
@@ -408,11 +411,14 @@ export default {
           )
           .then(
             (response) => {
-              console.log(response);
               this.getIssues();
+
+              console.log("openIssues after addIssue - ", this.openIssues);
+
+              console.log(response);
             },
-            (error) => {
-              console.log(error);
+            (e) => {
+              console.log("addIssue error - ", e);
             }
           );
       }
@@ -426,8 +432,7 @@ export default {
       })
         .then()
         .catch((e) => {
-          console.log(e);
-          this.getIssues();
+          console.log("putIssue error - ", e);
         });
     },
 
@@ -450,7 +455,7 @@ export default {
           headers: { Authorization: "Bearer " + this.$store.state.token },
         })
         .catch((e) => {
-          console.log(e);
+          console.log("deleteItemConfirm error - ", e);
         });
       this.closeDelete();
       this.getIssues();
@@ -476,11 +481,17 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.issues[this.editedIndex], this.editedItem);
         this.putIssue();
-        this.getIssues();
+        this.updateProjectIssueOrder();
       } else {
         this.issues.push(this.editedItem);
+        if (this.editedItem.status === "Open") {
+          this.openIssues.push(this.editedItem);
+        } else {
+          this.resolvedIssues.push(this.editedItem);
+        }
         this.addIssue();
         this.getIssues();
+        this.updateProjectIssueOrder();
       }
       this.close();
     },
@@ -494,12 +505,10 @@ export default {
       this.editedItem.title = "";
       this.editedItem.details = "";
       this.editedItem.id = "";
-      this.getIssues();
     },
     onEnd(evt) {
       if (evt.moved) {
         this.updateProjectIssueOrder();
-        this.getProjectIssueOrder();
       }
       if (evt.added) {
         this.editedItem.title = evt.added.element.title;
@@ -510,8 +519,8 @@ export default {
         } else {
           this.editedItem.status = "Open";
         }
+        this.createIssueOrderArrays();
         this.updateProjectIssueOrder();
-        this.getProjectIssueOrder();
 
         this.putIssue();
         this.editedItem.title = "";
@@ -525,7 +534,7 @@ export default {
         try {
           this.resolvedIssueOrderArr.push(this.resolvedIssues[index]);
         } catch (e) {
-          console.log(e);
+          console.log("createIssueOrderArrays error 1 - ", e);
         }
       }
       this.openIssueOrderArr = [];
@@ -533,7 +542,7 @@ export default {
         try {
           this.openIssueOrderArr.push(this.openIssues[index]);
         } catch (e) {
-          console.log(e);
+          console.log("createIssueOrderArrays error 2 - ", e);
         }
       }
     },
@@ -554,7 +563,7 @@ export default {
       })
         .then()
         .catch((e) => {
-          console.log(e);
+          console.log("updateProjectIssueOrder error - ", e);
         });
     },
     getProjectIssueOrder() {
@@ -573,7 +582,7 @@ export default {
           this.createIssueOrderArrays();
         })
         .catch((e) => {
-          console.log(e);
+          console.log("getProjectIssueOrder error - ", e);
         });
     },
   },

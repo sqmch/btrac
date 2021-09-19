@@ -23,7 +23,7 @@
         </v-list-item>
       </v-list>
       <template v-slot:append>
-        <div class="h3 mx-4">{{ user }}</div>
+        <div class="h3 mx-4">{{ $store.state.user }}</div>
         <div class="pa-2">
           <v-btn block @click="logout"> Logout </v-btn>
         </div>
@@ -49,7 +49,7 @@ import { mapGetters } from "vuex";
 export default {
   data: () => ({
     links: [["mdi-folder-multiple", "Projects", "/projects"]],
-    user: "",
+    user: null,
   }),
   methods: {
     ...mapGetters(["getUser"]),
@@ -63,9 +63,6 @@ export default {
     ghub() {
       window.open("https://github.com/sqmch/trvcker", "_blank");
     },
-  },
-  mounted() {
-    this.user = this.$store.state.user;
   },
 };
 </script>

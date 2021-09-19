@@ -2,6 +2,26 @@
   <v-app id="btrac">
     <v-form>
       <v-container>
+        <v-alert
+          v-show="registered"
+          transition="scale-transition"
+          dense
+          text
+          type="success"
+          dismissible
+          elevation="3"
+          >Account successfully created.</v-alert
+        >
+        <v-alert
+          v-show="registerFailed"
+          transition="scale-transition"
+          dense
+          text
+          type="error"
+          dismissible
+          elevation="3"
+          >Registration failed, check your credentials.</v-alert
+        >
         <v-card elevation="12" max-width="500" class="mx-auto mt-16">
           <v-card-title>
             <v-layout align-center justify-space-between>
@@ -64,7 +84,6 @@ import axios from "axios";
 
 export default {
   mixins: [validationMixin],
-
   validations: {
     email: { required, email },
     password: { required, minLength: minLength(6) },
@@ -75,8 +94,9 @@ export default {
     password: "",
     repassword: "",
     type: null,
-
     elapse: null,
+    registered: false,
+    registerFailed: false,
   }),
 
   computed: {
@@ -90,6 +110,8 @@ export default {
     },
     passwordErrors() {
       const passwordErrors = [];
+      if (!this.$v.password.$dirty) return passwordErrors;
+      !this.$v.password && passwordErrors.push("Must enter a valid password");
       !this.$v.password.required && passwordErrors.push("Password is required");
       return passwordErrors;
     },
@@ -117,7 +139,8 @@ export default {
         this.password.length > 6 &&
         this.repassword === this.password
       ) {
-        alert("Registered!");
+        //alert("Registered!");
+        this.registered = true;
         axios
           .post("http://127.0.0.1:1234/register", {
             email: this.email,
@@ -127,38 +150,13 @@ export default {
             //this.toLogin();
           })
           .catch((error) => {
+            this.registerFailed = true;
+
             console.log(error);
-          })
-          .then(() => {
-            this.toLogin();
           });
+      } else {
+        this.registerFailed = true;
       }
-    },
-    showAlert(type) {
-      this.type = type;
-
-      let timer = this.showAlert.timer;
-      if (timer) {
-        clearTimeout(timer);
-      }
-      this.showAlert.timer = setTimeout(() => {
-        this.type = null;
-      }, 3000);
-
-      this.elapse = 1;
-      let t = this.showAlert.t;
-      if (t) {
-        clearInterval(t);
-      }
-
-      this.showAlert.t = setInterval(() => {
-        if (this.elapse === 3) {
-          this.elapse = 0;
-          clearInterval(this.showAlert.t);
-        } else {
-          this.elapse++;
-        }
-      }, 1000);
     },
   },
 };

@@ -135,6 +135,7 @@ def update_order(current_user, id):
 def get_project_issue_order(current_user, id):
     """Returns project issue order"""
     order = Project.get_project_issue_order(current_user, id)
+    print(f"order - {order}")
     return jsonify({"order": order})
 
 

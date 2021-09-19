@@ -2,6 +2,16 @@
   <v-app id="btrac">
     <v-form>
       <v-container>
+        <v-alert
+          v-show="loginFailed"
+          transition="scale-transition"
+          dense
+          text
+          type="error"
+          dismissible
+          elevation="3"
+          >Login failed, check your credentials.</v-alert
+        >
         <v-card elevation="12" max-width="500" class="mx-auto mt-16">
           <v-card-title>
             <v-layout align-center justify-space-between>
@@ -10,10 +20,12 @@
               <v-flex> </v-flex>
             </v-layout>
           </v-card-title>
+
           <v-col>
             <v-col class="mx-auto" cols="12" sm="10">
               <v-text-field
                 v-model="email"
+                type="email"
                 :error-messages="emailErrors"
                 label="E-mail"
                 required
@@ -24,8 +36,8 @@
             <v-col class="mx-auto" cols="12" sm="10">
               <v-text-field
                 class="mb-6"
-                type="password"
                 :error-messages="passwordErrors"
+                type="password"
                 v-model="password"
                 label="Password"
                 required
@@ -40,23 +52,6 @@
               <v-btn depressed @click="toRegister"> register </v-btn>
             </v-col>
           </v-col>
-          <!-- experimenting with drag and drop
-          <v-expansion-panels>
-            <draggable v-model="items" class="row">
-              <v-expansion-panel v-for="item in items" :key="item.id">
-                <v-expansion-panel-header>
-                  {{ item.title }}
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </draggable>
-          </v-expansion-panels>
-           -->
         </v-card>
       </v-container>
     </v-form>
@@ -68,30 +63,19 @@ import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import axios from "axios";
 import { mapMutations } from "vuex";
-//import draggable from "vuedraggable";
 
 export default {
   mixins: [validationMixin],
-  //components: {
-  //draggable,
-
-  //},
   validations: {
     email: { required, email },
     password: { required },
   },
 
   data: () => ({
-    items: [
-      { id: 1, title: "abc" },
-      { id: 3, title: "ghi" },
-      { id: 4, title: "jkl" },
-      { id: 5, title: "mno" },
-      { id: 2, title: "def" },
-    ],
     alert: true,
     email: "",
     password: "",
+    loginFailed: false,
   }),
 
   computed: {
@@ -106,8 +90,7 @@ export default {
     passwordErrors() {
       const passwordErrors = [];
       if (!this.$v.password.$dirty) return passwordErrors;
-      !this.$v.password.password &&
-        passwordErrors.push("Must enter a valid password");
+      !this.$v.password && passwordErrors.push("Must enter a valid password");
       !this.$v.password.required && passwordErrors.push("Password is required");
       return passwordErrors;
     },
@@ -140,6 +123,7 @@ export default {
           this.$router.push("/projects");
         })
         .catch((error) => {
+          this.loginFailed = true;
           console.log(error);
         });
     },

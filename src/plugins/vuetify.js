@@ -16,6 +16,9 @@ export default new Vuetify({
 			},
 			light: {
 				primary: "#7e57c2",
+				secondary: "#9a67ea",
+				accent: colors.shades.black,
+				error: colors.red,
 			},
 		},
 	},

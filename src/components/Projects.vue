@@ -108,13 +108,6 @@ export default {
     draggable,
   },
   data: () => ({
-    items: [
-      { id: 1, title: "abc" },
-      { id: 3, title: "ghi" },
-      { id: 4, title: "jkl" },
-      { id: 5, title: "mno" },
-      { id: 2, title: "def" },
-    ],
     search: "",
     projectsLoading: false,
     dialog: false,
@@ -251,6 +244,7 @@ export default {
       this.close();
     },
     openProject(id) {
+      console.log("project id at project open - ", id);
       this.SET_PROJECT_ID(id);
       this.$router.push("/projects/issues");
     },

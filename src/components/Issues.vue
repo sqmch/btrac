@@ -163,7 +163,7 @@
               >
                 <div v-for="issue in openIssues" :key="issue.id">
                   <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header @click="setID(issue)">
                       {{ issue.title }}
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -233,7 +233,7 @@
               >
                 <div v-for="issue in resolvedIssues" :key="issue.id">
                   <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header @click="setID(issue)">
                       <p style="text-decoration: line-through">
                         {{ issue.title }}
                       </p>
@@ -439,9 +439,10 @@ export default {
     },
 
     editIssue(item) {
-      this.editedIndex = this.issues.indexOf(item);
+      console.log("editIssue() this.editedIndex - ", this.editedIndex);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+      this.editedIndex = this.issues.indexOf(item);
     },
 
     deleteItem(item) {
@@ -467,7 +468,6 @@ export default {
       this.dialog = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
       });
     },
 
@@ -475,16 +475,23 @@ export default {
       this.dialogDelete = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
       });
+    },
+    setID(item) {
+      if (this.editedIndex === -1) {
+        this.getIssues();
+      }
+      this.editedIndex = this.issues.indexOf(item);
+      console.log("editedIndex after setID - ", this.editedIndex);
     },
 
     save() {
-      if (this.editedIndex > -1) {
+      if (this.editedIndex !== -1) {
         Object.assign(this.issues[this.editedIndex], this.editedItem);
         this.putIssue();
-        this.editedIndex = -1;
       } else {
+        this.addIssue();
+
         this.issues.push(this.editedItem);
         /*
         if (this.editedItem.status === "Open") {
@@ -492,7 +499,6 @@ export default {
         } else {
           this.resolvedIssues.push(this.editedItem);
         }*/
-        this.addIssue();
         this.getIssues();
         this.updateProjectIssueOrder();
       }

@@ -14,6 +14,8 @@
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
+        <!-- add project dialog -->
+
         <v-dialog v-model="dialog" max-width="500px">
           <template class="float-right" v-slot:activator="{ on, attrs }">
             <v-btn large color="primary" dark class="" v-bind="attrs" v-on="on">
@@ -54,6 +56,8 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- delete dialog -->
+
         <v-dialog
           :retain-focus="false"
           v-model="dialogDelete"
@@ -97,6 +101,7 @@
             >
 
             <v-divider class="ml-3" inset vertical></v-divider>
+            <!-- delete dialog -->
 
             <v-dialog :retain-focus="false" v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on, attrs }">
@@ -162,8 +167,8 @@
                 :name="!drag ? 'flip-list' : null"
               >
                 <div v-for="issue in openIssues" :key="issue.id">
-                  <v-expansion-panel>
-                    <v-expansion-panel-header @click="setID(issue)">
+                  <v-expansion-panel @click="setID(issue)">
+                    <v-expansion-panel-header>
                       {{ issue.title }}
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -232,8 +237,8 @@
                 :name="!drag ? 'flip-list' : null"
               >
                 <div v-for="issue in resolvedIssues" :key="issue.id">
-                  <v-expansion-panel>
-                    <v-expansion-panel-header @click="setID(issue)">
+                  <v-expansion-panel @click="setID(issue)">
+                    <v-expansion-panel-header>
                       <p style="text-decoration: line-through">
                         {{ issue.title }}
                       </p>
@@ -479,6 +484,7 @@ export default {
     },
     setID(item) {
       if (this.editedIndex === -1) {
+        this.updateProjectIssueOrder();
         this.getIssues();
       }
       this.editedIndex = this.issues.indexOf(item);
@@ -499,7 +505,7 @@ export default {
         } else {
           this.resolvedIssues.push(this.editedItem);
         }*/
-        this.getIssues();
+        //this.getIssues();
         this.updateProjectIssueOrder();
       }
       this.getIssues();

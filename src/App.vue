@@ -26,7 +26,7 @@
         <div class="text-center"></div>
 
         <div class="h3 mx-4 text-center">
-          Logged in as {{ $store.state.user }}
+          {{ $store.state.user }}
         </div>
         <div class="pa-2">
           <v-btn block @click="logout"> Logout </v-btn>

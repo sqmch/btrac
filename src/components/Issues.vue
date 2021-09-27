@@ -150,9 +150,9 @@
               </v-card>
             </v-dialog>
           </v-toolbar>
-          <v-expansion-panels flat focusable class="my-2 pa-0">
+          <v-expansion-panels flat focusable class="my-2 pa-0" elevation="2">
             <draggable
-              :empty-insert-threshold="200"
+              :empty-insert-threshold="400"
               group="issues"
               :list="openIssues"
               shaped
@@ -221,13 +221,13 @@
               {{ this.resolvedIssues.length }}</v-btn
             >
           </v-toolbar>
-          <v-expansion-panels popout focusable class="my-2" elevation="2">
+          <v-expansion-panels popout focusable class="my-2 pa-0" elevation="2">
             <draggable
-              :empty-insert-threshold="200"
+              :empty-insert-threshold="400"
               group="issues"
               :list="resolvedIssues"
               shaped
-              class="col-12 my-2 list-group"
+              class="col-12 list-group"
               v-bind="dragOptions"
               @change="onEnd"
               @start="drag = true"

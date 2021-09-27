@@ -62,9 +62,6 @@
         </v-dialog>
       </v-toolbar>
     </v-card>
-    <v-toolbar flat>
-      <v-toolbar-title>Recent</v-toolbar-title>
-    </v-toolbar>
     <v-expansion-panels flat focusable class="pa-6 my-2 mx-2" elevation="0">
       <draggable shaped v-model="projects" class="row">
         <v-expansion-panel flat v-for="project in projects" :key="project.id">

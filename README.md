@@ -32,6 +32,11 @@ Install backend dependencies:
 ```
 pip install -r requirements.txt
 ```
+Create the db tables for the default sqlite example (run in python interpreter:
+```
+>>> from models import db
+>>> db.create_all()
+```
 Run the flask server
 ```python
 python api.py

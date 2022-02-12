@@ -2,10 +2,11 @@
 
 ## Built with
 
-- Python (Flask)
+- Python (Flask, sqlite with SQLAlchemy)
 - Vue.js (Vuetify)
 
 ### Demo: https://trvcker.netlify.app/
+Frontend hosted on Netlify, backend hosted on Heroku.
 
 ## About the project
 
